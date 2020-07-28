@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="EthereumWallet.Modules.Login.LoginView"
+             BackgroundColor="White"
+             NavigationPage.HasNavigationBar="False">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <AbsoluteLayout
+                Padding="0, 25, 0, 0"
+                HeightRequest="100">
+                <Frame
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.85, 1"
+                    CornerRadius="35"
+                    HasShadow="True"
+                    BorderColor="DodgerBlue">
+                    <Label
+                        AbsoluteLayout.LayoutFlags="All"
+                        AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        FontFamily="PrototypeFont"
+                        FontSize="37.5"
+                        TextColor="Black"
+                        Text="Ethereum Wallet">
+                    </Label>
+                </Frame>
+            </AbsoluteLayout>
+            <Image
+                HeightRequest="125"
+                Source="ethereumlogo.png">
+            </Image>
+            <Label
+                Padding="0, 125, 0, 0"
+                HorizontalTextAlignment="Center"
+                FontSize="30"
+                TextColor="Black"
+                FontFamily="PrototypeFont"
+                Text="Log-In">
+            </Label>
+            <AbsoluteLayout
+                Padding="0, 10, 0, 0"
+                HeightRequest="80">
+                <Frame
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
+                    CornerRadius="35"
+                    HasShadow="True"
+                    BorderColor="DodgerBlue">
+                    <Entry
+                        x:Name="privateKeyEntry"
+                        FontFamily="PrototypeFont"
+                        PlaceholderColor="Black"
+                        Placeholder="Private Key"
+                        HorizontalTextAlignment="Center"
+                        ReturnCommand="{Binding PrivateKeyCommand}"
+                        ReturnCommandParameter="{Binding Source={x:Reference privateKeyEntry}, Path=Text}">
+                    </Entry>
+                </Frame>
+            </AbsoluteLayout>
+            <AbsoluteLayout
+                Padding="0, 15, 0, 0"
+                HeightRequest="80">
+                <Frame
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
+                    CornerRadius="35"
+                    HasShadow="True"
+                    BorderColor="DodgerBlue">
+                </Frame>
+                <Button
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
+                    Text="Keystore File"
+                    FontFamily="PrototypeFont"
+                    BackgroundColor="Transparent"
+                    Command="{Binding KeystoreCommand}">
+                </Button>
+            </AbsoluteLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

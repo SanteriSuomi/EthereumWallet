@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthereumWallet.iOS", "Ether
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthereumWallet", "EthereumWallet\EthereumWallet.csproj", "{007B2817-0432-4847-B2E7-7781B7AB30CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthereumWallet.Tests", "..\EthereumWallet.Tests\EthereumWallet.Tests.csproj", "{AE6E10C5-19C9-48AE-B152-67684BE1412F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,18 @@ Global
 		{007B2817-0432-4847-B2E7-7781B7AB30CA}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{007B2817-0432-4847-B2E7-7781B7AB30CA}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{007B2817-0432-4847-B2E7-7781B7AB30CA}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|iPhone.Build.0 = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{AE6E10C5-19C9-48AE-B152-67684BE1412F}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
