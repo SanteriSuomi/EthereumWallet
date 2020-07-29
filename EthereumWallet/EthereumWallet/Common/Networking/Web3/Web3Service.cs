@@ -46,7 +46,7 @@ namespace EthereumWallet.Common.Networking.WebThree
                     var keystore = JsonConvert.DeserializeObject<KeyStoreRoot>(json);
                     if (keystore != null)
                     {
-                        var newAccount = Account.LoadFromKeyStore(json, /*password*/"6Sm*39vr44mvHho");
+                        var newAccount = Account.LoadFromKeyStore(json, password);
                         if (HasValidAddress(newAccount))
                         {
                             Account = newAccount;
@@ -59,10 +59,10 @@ namespace EthereumWallet.Common.Networking.WebThree
             });
         }
 
-        private static bool HasValidAddress(Account newAccount)
+        private static bool HasValidAddress(Account account)
         {
-            return AddressUtil.Current.IsValidAddressLength(newAccount?.Address)
-                    && AddressUtil.Current.IsChecksumAddress(newAccount?.Address);
+            return AddressUtil.Current.IsValidAddressLength(account?.Address)
+                    && AddressUtil.Current.IsChecksumAddress(account?.Address);
         }
     }
 }

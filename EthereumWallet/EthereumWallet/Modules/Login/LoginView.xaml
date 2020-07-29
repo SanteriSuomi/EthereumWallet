@@ -84,10 +84,10 @@
                         ReturnCommand="{Binding PrivateKeyReturnCommand}"
                         ReturnCommandParameter="{Binding Source={x:Reference privateKeyEntry}, Path=Text}">
                         <Entry.Behaviors>
-                            <behaviours:EntryTextChangedCommand
+                            <behaviours:EntryTextChangedCommandBehaviour
                                 BindingContext="{Binding BindingContext, Source={x:Reference contentPage}}"
                                 TextChangedCommand="{Binding PrivateKeyTextChangedCommand}">
-                            </behaviours:EntryTextChangedCommand>
+                            </behaviours:EntryTextChangedCommandBehaviour>
                         </Entry.Behaviors>
                     </Entry>
                 </Frame>

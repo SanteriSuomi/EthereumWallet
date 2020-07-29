@@ -3,7 +3,7 @@ using EthereumWallet.Common.Extensions;
 using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Modules.Base;
-using EthereumWallet.Modules.Wallet;
+using EthereumWallet.Modules.WalletRoot;
 using Plugin.FilePicker;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +14,6 @@ namespace EthereumWallet.Modules.Login
 {
     public class LoginViewModel : BaseViewModel
     {
-
         public LoginViewModel(IWeb3Service web3Service, INavigationService navigationService, IDialogService dialogService)
         {
             _web3Service = web3Service;
@@ -27,7 +26,6 @@ namespace EthereumWallet.Modules.Login
 
         public ICommand PrivateKeyReturnCommand { get; set; }
         public ICommand PrivateKeyTextChangedCommand { get; set; }
-
         public ICommand KeystoreCommand { get; set; }
 
         private bool _loadingIndicator;
@@ -90,7 +88,6 @@ namespace EthereumWallet.Modules.Login
 
         private async Task TrySetPrivateKey(string text)
         {
-            await _navigationService.PushAsync<WalletViewModel>(null, true);
             if (string.IsNullOrEmpty(text))
             {
                 PrivateKeyInfoLabelEnabled = false;
@@ -107,7 +104,7 @@ namespace EthereumWallet.Modules.Login
                 var result = await _web3Service.TrySetAccountPrivateKey(text);
                 if (result)
                 {
-                    await _navigationService.PushAsync<WalletViewModel>(null, true);
+                    await _navigationService.PushAsync<WalletRootViewModel>(null, true);
                 }
             }
         }
@@ -128,7 +125,7 @@ namespace EthereumWallet.Modules.Login
                     LoadingIndicator = false;
                     ContentPageTouchEnabled = true;
 
-                    await _navigationService.PushAsync<WalletViewModel>(null, true);
+                    await _navigationService.PushAsync<WalletRootViewModel>(null, true);
                 }
             }
 

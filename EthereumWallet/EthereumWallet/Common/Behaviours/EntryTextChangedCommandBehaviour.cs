@@ -3,10 +3,10 @@ using Xamarin.Forms;
 
 namespace EthereumWallet.Common.Behaviours
 {
-    public class EntryTextChangedCommand : Behavior<Entry>
+    public class EntryTextChangedCommandBehaviour : Behavior<Entry>
     {
         public static readonly BindableProperty TextChangedCommandProperty =
-            BindableProperty.Create(nameof(TextChangedCommand), typeof(ICommand), typeof(EntryTextChangedCommand), null);
+            BindableProperty.Create(nameof(TextChangedCommand), typeof(ICommand), typeof(EntryTextChangedCommandBehaviour), null);
 
         public ICommand TextChangedCommand
         {

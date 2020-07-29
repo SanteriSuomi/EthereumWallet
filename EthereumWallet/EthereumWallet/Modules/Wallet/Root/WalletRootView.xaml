@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:behaviours="clr-namespace:EthereumWallet.Common.Behaviours"
+             mc:Ignorable="d"
+             x:Class="EthereumWallet.Modules.WalletRoot.WalletRootView"
+             Title="{Binding RootNavigationBarTitle}">
+    
+    <TabbedPage.Behaviors>
+        <behaviours:TabbedPageAddChildrenBehaviour>
+        </behaviours:TabbedPageAddChildrenBehaviour>
+    </TabbedPage.Behaviors>
+</TabbedPage>

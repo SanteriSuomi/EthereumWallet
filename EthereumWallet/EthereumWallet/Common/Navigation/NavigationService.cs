@@ -18,6 +18,8 @@ namespace EthereumWallet.Common.Navigation
 
         public static Dictionary<Type, Type> PageMap { get; } = GetAndRegisterViewsToViewModels();
 
+        public IReadOnlyList<Page> NavigationStack => _navigation.Value.NavigationStack;
+
         private readonly Lazy<INavigation> _navigation;
 
         public async Task<bool> PushAsync<TViewModel>(object parameter = null, bool animated = true) where TViewModel : BaseViewModel

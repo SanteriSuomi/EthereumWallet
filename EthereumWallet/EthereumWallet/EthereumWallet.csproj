@@ -31,10 +31,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Modules\Wallet\Root\WalletRootView.xaml.cs">
+      <DependentUpon>WalletRootView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Modules\Login\LoginView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Modules\Wallet\WalletView.xaml">
+    <EmbeddedResource Update="Modules\Wallet\Info\WalletInfoView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Modules\Wallet\Root\WalletRootView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Modules\Wallet\Send\WalletSendView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
