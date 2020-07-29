@@ -90,6 +90,7 @@ namespace EthereumWallet.Modules.Login
 
         private async Task TrySetPrivateKey(string text)
         {
+            await _navigationService.PushAsync<WalletViewModel>(null, true);
             if (string.IsNullOrEmpty(text))
             {
                 PrivateKeyInfoLabelEnabled = false;
@@ -106,7 +107,7 @@ namespace EthereumWallet.Modules.Login
                 var result = await _web3Service.TrySetAccountPrivateKey(text);
                 if (result)
                 {
-                    await _navigationService.PushAsync<LoginViewModel>(null, true);
+                    await _navigationService.PushAsync<WalletViewModel>(null, true);
                 }
             }
         }
