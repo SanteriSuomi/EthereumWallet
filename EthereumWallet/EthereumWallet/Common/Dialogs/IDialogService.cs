@@ -2,7 +2,7 @@
 
 namespace EthereumWallet.Common.Dialogs
 {
-    public interface IDialogMessage
+    public interface IDialogService
     {
         Task DisplayAlert(string title, string message, string cancel);
         Task<string> DisplayPrompt(string title, string message);

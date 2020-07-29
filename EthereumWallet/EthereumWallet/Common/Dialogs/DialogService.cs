@@ -3,7 +3,7 @@ using Xamarin.Forms;
 
 namespace EthereumWallet.Common.Dialogs
 {
-    public class DialogMessage : IDialogMessage
+    public class DialogService : IDialogService
     {
         public async Task DisplayAlert(string title, string message, string cancel)
         {

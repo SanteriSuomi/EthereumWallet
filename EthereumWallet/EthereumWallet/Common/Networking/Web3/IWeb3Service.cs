@@ -1,5 +1,6 @@
 ﻿using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
+using System.Threading.Tasks;
 
 namespace EthereumWallet.Common.Networking.WebThree
 {
@@ -7,7 +8,7 @@ namespace EthereumWallet.Common.Networking.WebThree
     {
         Web3 Client { get; }
         Account Account { get; }
-        bool TrySetAccountPrivateKey(string privateKey);
-        bool TrySetAccountKeystore(string content);
+        Task<bool> TrySetAccountPrivateKey(string privateKey);
+        Task<bool> TrySetAccountKeystore(string json, string password);
     }
 }
