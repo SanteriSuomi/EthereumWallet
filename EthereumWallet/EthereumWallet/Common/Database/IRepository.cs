@@ -7,6 +7,7 @@ namespace EthereumWallet.Common.Database
     {
         Task<T> GetById(int id);
         Task<T> GetByObject(T item);
+        Task<T> GetFirstOrDefault();
         Task<int> DeleteAsync(T item);
         Task<List<T>> GetAllAsync();
         Task<int> SaveAsync(T item);

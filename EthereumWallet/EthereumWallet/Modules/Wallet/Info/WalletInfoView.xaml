@@ -6,7 +6,8 @@
              xmlns:converters="clr-namespace:EthereumWallet.Common.Converters"
              mc:Ignorable="d"
              x:Class="EthereumWallet.Modules.Wallet.Info.WalletInfoView"
-             Title="Info">
+             Title="Info"
+             x:Name="page">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,6 +16,13 @@
             </converters:DoubleToStringConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Refresh"
+            Command="{Binding RefreshPressed}">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <ScrollView>
@@ -105,7 +113,8 @@
                         ItemsSource="{Binding Tokens}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="45, 0, 0, 0">
+                                <Grid 
+                                    Padding="45, 0, 0, 0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="325"/>
                                     </Grid.ColumnDefinitions>
@@ -113,34 +122,47 @@
                                         HasShadow="True"
                                         CornerRadius="20"
                                         BorderColor="Black">
-                                        <Expander
-                                            Padding="20, 0, 0, 0">
+                                        <Expander>
                                             <Expander.Header>
-                                                <Label
-                                                    TextColor="Black"
-                                                    FontSize="20"
-                                                    FontFamily="PrototypeFont"
-                                                    Text="{Binding tokenInfo.name}">
-                                                </Label>
+                                                <StackLayout>
+                                                    <Button
+                                                        TextColor="Black"
+                                                        FontSize="20"
+                                                        FontFamily="PrototypeFont"
+                                                        BackgroundColor="Transparent"
+                                                        Text="{Binding tokenInfo.name}"
+                                                        Command="{Binding Source={x:Reference page}, Path=BindingContext.TokenListItemPressed}"
+                                                        CommandParameter="{Binding .}">
+                                                    </Button>
+                                                    <StackLayout
+                                                        Orientation="Horizontal">
+                                                        <Label
+                                                            Padding="25, 0, 0, 0"
+                                                            HorizontalOptions="Start"
+                                                            VerticalOptions="Center"
+                                                            HorizontalTextAlignment="Center"
+                                                            VerticalTextAlignment="Center"
+                                                            TextColor="Black"
+                                                            FontFamily="PrototypeFont"
+                                                            FontSize="22.5"
+                                                            Text="Balance">
+                                                        </Label>
+                                                        <Label
+                                                            Padding="10, 4, 0, 0"
+                                                            WidthRequest="150"
+                                                            HorizontalOptions="Start"
+                                                            VerticalOptions="Center"
+                                                            HorizontalTextAlignment="Start"
+                                                            VerticalTextAlignment="Center"
+                                                            LineBreakMode="TailTruncation"
+                                                            TextColor="Black"
+                                                            FontFamily="PrototypeFont"
+                                                            FontSize="20"
+                                                            Text="{Binding balance}">
+                                                        </Label>
+                                                    </StackLayout>
+                                                </StackLayout>
                                             </Expander.Header>
-                                            <StackLayout
-                                                Margin="0, 10, 0, 0"
-                                                Orientation="Horizontal">
-                                                <Label
-                                                    WidthRequest="110"
-                                                    TextColor="Black"
-                                                    FontSize="20"
-                                                    FontFamily="PrototypeFont"
-                                                    Text="Balance">
-                                                </Label>
-                                                <Label
-                                                    TextColor="Black"
-                                                    FontSize="20"
-                                                    LineBreakMode="TailTruncation"
-                                                    FontFamily="PrototypeFont"
-                                                    Text="{Binding balance, Converter={StaticResource doubleToString}}">
-                                                </Label>
-                                            </StackLayout>
                                         </Expander>
                                     </Frame>
                                 </Grid>

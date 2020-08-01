@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="EthereumWallet.Modules.Wallet.Info.TokenInfo.TokenInfoView"
+             Title="{Binding Title}">
+    
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <Expander>
+                    <Expander.Header>
+                        <Frame
+                            Margin="5, 0, 5, 0"
+                            HasShadow="True"
+                            CornerRadius="20"
+                            BorderColor="Black">
+                            <StackLayout
+                                Orientation="Horizontal">
+                                <Label
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="Black"
+                                    FontFamily="PrototypeFont"
+                                    FontSize="40"
+                                    Text="Price Details">
+                                </Label>
+                            </StackLayout>
+                        </Frame>
+                    </Expander.Header>
+                    <Expander.Content>
+                        <AbsoluteLayout>
+                            <Frame
+                                AbsoluteLayout.LayoutFlags="PositionProportional"
+                                AbsoluteLayout.LayoutBounds="0.5, 0, 325, 225"
+                                Margin="5, 0, 5, 0"
+                                HasShadow="True"
+                                CornerRadius="20"
+                                BorderColor="Black">
+                                <StackLayout
+                                    Orientation="Vertical">
+                                    <Label
+                                        Padding="150, 0, 0, 0"
+                                        WidthRequest="225"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        VerticalTextAlignment="Center"
+                                        LineBreakMode="TailTruncation"
+                                        TextColor="Black"
+                                        FontSize="17.5"
+                                        FontAttributes="Bold"
+                                        Text="{Binding TokenPrice.currency}">
+                                    </Label>
+                                    <StackLayout
+                                        HeightRequest="50"
+                                        Orientation="Horizontal">
+                                        <Label
+                                            WidthRequest="300"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalTextAlignment="Center"
+                                            TextColor="Black"
+                                            FontFamily="PrototypeFont"
+                                            FontSize="22.5"
+                                            Text="Market Cap">
+                                        </Label>
+                                        <Label
+                                            Padding="-15, 0, 0, 0"
+                                            HeightRequest="85"
+                                            WidthRequest="225"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"
+                                            LineBreakMode="TailTruncation"
+                                            TextColor="Black"
+                                            FontSize="17.5"
+                                            Text="{Binding TokenPrice.marketCapUsd}">
+                                        </Label>
+                                    </StackLayout>
+                                    <StackLayout
+                                        HeightRequest="50"
+                                        Orientation="Horizontal">
+                                        <Label
+                                            WidthRequest="300"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalTextAlignment="Center"
+                                            TextColor="Black"
+                                            FontFamily="PrototypeFont"
+                                            FontSize="22.5"
+                                            Text="Current Price">
+                                        </Label>
+                                        <Label
+                                            Padding="-15, 5, 0, 0"
+                                            HeightRequest="85"
+                                            WidthRequest="190"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"
+                                            LineBreakMode="TailTruncation"
+                                            TextColor="Black"
+                                            FontSize="17.5"
+                                            Text="{Binding TokenPrice.rate}">
+                                        </Label>
+                                    </StackLayout>
+                                    <StackLayout
+                                        HeightRequest="50"
+                                        Orientation="Horizontal">
+                                        <Label
+                                            WidthRequest="500"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalTextAlignment="Center"
+                                            TextColor="Black"
+                                            FontFamily="PrototypeFont"
+                                            FontSize="22.5"
+                                            Text="Week Difference">
+                                        </Label>
+                                        <Label
+                                            Padding="-17.5, 0, 0, 0"
+                                            HeightRequest="85"
+                                            WidthRequest="190"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"
+                                            LineBreakMode="TailTruncation"
+                                            TextColor="Black"
+                                            FontSize="17.5"
+                                            Text="{Binding TokenPrice.diff7d}">
+                                        </Label>
+                                    </StackLayout>
+                                    <StackLayout
+                                        HeightRequest="50"
+                                        Orientation="Horizontal">
+                                        <Label
+                                            WidthRequest="500"
+                                            HorizontalOptions="Start"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Start"
+                                            VerticalTextAlignment="Center"
+                                            TextColor="Black"
+                                            FontFamily="PrototypeFont"
+                                            FontSize="22.5"
+                                            Text="Month Difference">
+                                        </Label>
+                                        <Label
+                                            HeightRequest="85"
+                                            WidthRequest="190"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            HorizontalTextAlignment="Center"
+                                            VerticalTextAlignment="Center"
+                                            LineBreakMode="TailTruncation"
+                                            TextColor="Black"
+                                            FontSize="17.5"
+                                            Text="{Binding TokenPrice.diff30d}">
+                                        </Label>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </AbsoluteLayout>
+                    </Expander.Content>
+                </Expander>
+                <Frame
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            FontFamily="PrototypeFont"
+                            FontSize="40"
+                            Text="Address">
+                        </Label>
+                        <Label
+                            HeightRequest="85"
+                            WidthRequest="190"
+                            Padding="20, 7.5, 0, 0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            LineBreakMode="CharacterWrap"
+                            TextColor="Black"
+                            FontSize="20"
+                            Text="{Binding Token.tokenInfo.address}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Frame
+                    HeightRequest="65"
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            WidthRequest="190"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            FontFamily="PrototypeFont"
+                            FontSize="40"
+                            Text="Decimals">
+                        </Label>
+                        <Label
+                            HeightRequest="85"
+                            WidthRequest="190"
+                            Padding="20, 7.5, 0, 0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            LineBreakMode="CharacterWrap"
+                            TextColor="Black"
+                            FontSize="22.5"
+                            Text="{Binding Token.tokenInfo.decimals}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Frame
+                    HeightRequest="65"
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            WidthRequest="190"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            FontFamily="PrototypeFont"
+                            FontSize="40"
+                            Text="Symbol">
+                        </Label>
+                        <Label
+                            HeightRequest="85"
+                            WidthRequest="190"
+                            Padding="20, 7.5, 0, 0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            LineBreakMode="CharacterWrap"
+                            TextColor="Black"
+                            FontSize="22.5"
+                            Text="{Binding Token.tokenInfo.symbol}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Frame
+                    HeightRequest="110"
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            WidthRequest="190"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            FontFamily="PrototypeFont"
+                            FontSize="40"
+                            Text="Available Supply">
+                        </Label>
+                        <Label
+                            HeightRequest="85"
+                            WidthRequest="190"
+                            Padding="20, 7.5, 0, 0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            LineBreakMode="CharacterWrap"
+                            TextColor="Black"
+                            FontSize="22.5"
+                            Text="{Binding TokenPrice.availableSupply}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

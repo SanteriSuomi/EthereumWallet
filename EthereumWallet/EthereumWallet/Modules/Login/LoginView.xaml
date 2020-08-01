@@ -10,7 +10,7 @@
              NavigationPage.HasNavigationBar="False"
              IsEnabled="{Binding ContentPageTouchEnabled}"
              x:Name="contentPage">
-    
+
     <ContentPage.Content>
         <StackLayout>
             <AbsoluteLayout
@@ -58,16 +58,15 @@
                 </Label>
             </AbsoluteLayout>
             <Label
-                Padding="0, 65, 0, 0"
                 HorizontalTextAlignment="Center"
-                FontSize="30"
+                FontSize="35"
                 TextColor="Black"
                 FontFamily="PrototypeFont"
                 Text="Log-In">
             </Label>
             <AbsoluteLayout
                 Padding="0, 10, 0, 0"
-                HeightRequest="80">
+                HeightRequest="90">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
@@ -81,6 +80,7 @@
                         Placeholder="Enter Private Key"
                         HorizontalTextAlignment="Center"
                         IsPassword="True"
+                        Text="{Binding PrivateKeyText, Mode=TwoWay}"
                         ReturnCommand="{Binding PrivateKeyReturnCommand}"
                         ReturnCommandParameter="{Binding Source={x:Reference privateKeyEntry}, Path=Text}">
                         <Entry.Behaviors>
@@ -94,7 +94,7 @@
             </AbsoluteLayout>
             <AbsoluteLayout
                 Padding="0, 15, 0, 0"
-                HeightRequest="80">
+                HeightRequest="90">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
@@ -109,6 +109,25 @@
                     FontFamily="PrototypeFont"
                     BackgroundColor="Transparent"
                     Command="{Binding KeystoreCommand}">
+                </Button>
+            </AbsoluteLayout>
+            <AbsoluteLayout
+                Padding="0, 30, 0, 0"
+                HeightRequest="60">
+                <Frame
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.5, 1"
+                    CornerRadius="35"
+                    HasShadow="True"
+                    BorderColor="DodgerBlue">
+                </Frame>
+                <Button
+                    AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
+                    Text="Choose Endpoint"
+                    FontFamily="PrototypeFont"
+                    BackgroundColor="Transparent"
+                    Command="{Binding ChooseEndpointPressed}">
                 </Button>
             </AbsoluteLayout>
         </StackLayout>

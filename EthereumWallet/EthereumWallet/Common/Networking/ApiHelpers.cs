@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Settings;
+using System;
 
 namespace EthereumWallet.Common.Networking
 {
@@ -11,12 +13,28 @@ namespace EthereumWallet.Common.Networking
         /// <returns>GET Url</returns>
         public static string GetEthplorerUrl(string request)
         {
-            return $"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}";
+            switch (App.Settings.Endpoint)
+            {
+                case Endpoint.Mainnet:
+                    return $"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}";
+                case Endpoint.Kovan:
+                    return $"{ApiConstants.EthplorerKovanApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}";
+                default:
+                    return $"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}";
+            }
         }
 
         public static Uri GetEthplorerUri(string request)
         {
-            return new Uri($"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}");
+            switch (App.Settings.Endpoint)
+            {
+                case Endpoint.Mainnet:
+                    return new Uri($"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}");
+                case Endpoint.Kovan:
+                    return new Uri($"{ApiConstants.EthplorerKovanApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}");
+                default:
+                    return new Uri($"{ApiConstants.EthplorerMainnetApiUrl}{request}?apiKey={ApiConstants.EthplorerApiKey}");
+            }
         }
     }
 }

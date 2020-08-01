@@ -1,4 +1,6 @@
-﻿using EthereumWallet.Common.Data;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Data;
+using EthereumWallet.Common.Settings;
 using Nethereum.Util;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
@@ -9,18 +11,27 @@ namespace EthereumWallet.Common.Networking.WebThree
 {
     public class Web3Service : IWeb3Service
     {
-        public Web3 Client { get; }
+        public Web3 Client { get; set; }
         public Account Account { get; private set; }
 
-        public Web3Service()
+        public void UpdateClient()
         {
-            Client = new Web3(ApiConstants.InfuraMainnetApiUrl);
+            switch (App.Settings.Endpoint)
+            {
+                case Endpoint.Mainnet:
+                    Client = new Web3(ApiConstants.EthplorerMainnetApiUrl);
+                    break;
+                case Endpoint.Kovan:
+                    Client = new Web3(ApiConstants.EthplorerKovanApiUrl);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
         /// Attempt to set account using private key.
         /// </summary>
-        /// <param name="privateKey"></param>
         /// <returns>Whether the creation was succesful or not.</returns>
         public async Task<bool> TrySetAccountPrivateKey(string privateKey)
         {
@@ -37,6 +48,10 @@ namespace EthereumWallet.Common.Networking.WebThree
             });
         }
 
+        /// <summary>
+        /// Attempt to set account using keystore file and password.
+        /// </summary>
+        /// <returns>Whether the creation was succesful or not.</returns>
         public async Task<bool> TrySetAccountKeystore(string json, string password)
         {
             return await Task.Run(() =>

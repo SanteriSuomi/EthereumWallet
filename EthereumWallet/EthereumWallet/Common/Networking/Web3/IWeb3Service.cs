@@ -8,6 +8,7 @@ namespace EthereumWallet.Common.Networking.WebThree
     {
         Web3 Client { get; }
         Account Account { get; }
+        void UpdateClient();
         Task<bool> TrySetAccountPrivateKey(string privateKey);
         Task<bool> TrySetAccountKeystore(string json, string password);
     }

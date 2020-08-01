@@ -61,6 +61,11 @@ namespace EthereumWallet.Common.Database
             return Database.GetAsync<T>(item);
         }
 
+        public Task<T> GetFirstOrDefault()
+        {
+            return Database.Table<T>().FirstOrDefaultAsync();
+        }
+
         public Task<int> DeleteAsync(T item)
         {
             return Database.DeleteAsync(item);
