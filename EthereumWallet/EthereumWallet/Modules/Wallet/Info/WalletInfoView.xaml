@@ -114,6 +114,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid 
+                                    HeightRequest="120"
                                     Padding="45, 0, 0, 0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="325"/>
@@ -125,15 +126,24 @@
                                         <Expander>
                                             <Expander.Header>
                                                 <StackLayout>
-                                                    <Button
-                                                        TextColor="Black"
-                                                        FontSize="20"
-                                                        FontFamily="PrototypeFont"
-                                                        BackgroundColor="Transparent"
-                                                        Text="{Binding tokenInfo.name}"
-                                                        Command="{Binding Source={x:Reference page}, Path=BindingContext.TokenListItemPressed}"
-                                                        CommandParameter="{Binding .}">
-                                                    </Button>
+                                                    <AbsoluteLayout>
+                                                        <Frame
+                                                            AbsoluteLayout.LayoutFlags="All"
+                                                            AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+                                                            HasShadow="True"
+                                                            CornerRadius="20"
+                                                            BorderColor="Black">
+                                                        </Frame>
+                                                        <Button
+                                                            TextColor="Black"
+                                                            FontSize="20"
+                                                            FontFamily="PrototypeFont"
+                                                            BackgroundColor="Transparent"
+                                                            Text="{Binding tokenInfo.name}"
+                                                            Command="{Binding Source={x:Reference page}, Path=BindingContext.TokenListItemPressed}"
+                                                            CommandParameter="{Binding .}">
+                                                        </Button>
+                                                    </AbsoluteLayout>
                                                     <StackLayout
                                                         Orientation="Horizontal">
                                                         <Label
@@ -144,11 +154,11 @@
                                                             VerticalTextAlignment="Center"
                                                             TextColor="Black"
                                                             FontFamily="PrototypeFont"
-                                                            FontSize="22.5"
+                                                            FontSize="20"
                                                             Text="Balance">
                                                         </Label>
                                                         <Label
-                                                            Padding="10, 4, 0, 0"
+                                                            Padding="10, 3, 0, 0"
                                                             WidthRequest="150"
                                                             HorizontalOptions="Start"
                                                             VerticalOptions="Center"

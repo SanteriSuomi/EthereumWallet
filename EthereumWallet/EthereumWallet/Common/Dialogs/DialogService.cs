@@ -15,9 +15,9 @@ namespace EthereumWallet.Common.Dialogs
             return Application.Current.MainPage.DisplayPromptAsync(title, message);
         }
 
-        public Task<string> DisplayActionSheet(string title, string destruction, params string[] buttons)
+        public Task<string> DisplayActionSheet(string title, string cancel, string destruction, params string[] buttons)
         {
-            return Application.Current.MainPage.DisplayActionSheet(title, "Cancel", destruction, buttons);
+            return Application.Current.MainPage.DisplayActionSheet(title, cancel, destruction, buttons);
         }
     }
 }

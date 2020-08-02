@@ -9,7 +9,8 @@
     
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
+            <StackLayout
+                Padding="0, 7.5, 0, 0">
                 <Expander>
                     <Expander.Header>
                         <Frame

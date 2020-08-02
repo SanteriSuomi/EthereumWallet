@@ -41,7 +41,7 @@
             <AbsoluteLayout
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
-                Margin="0, 60, 0, 0">
+                Margin="0, 20, 0, 0">
                 <ActivityIndicator
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
@@ -65,7 +65,7 @@
                 Text="Log-In">
             </Label>
             <AbsoluteLayout
-                Padding="0, 10, 0, 0"
+                Padding="0, 7.5, 0, 0"
                 HeightRequest="90">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
@@ -79,6 +79,7 @@
                         PlaceholderColor="Black"
                         Placeholder="Enter Private Key"
                         HorizontalTextAlignment="Center"
+                        FontSize="22.5"
                         IsPassword="True"
                         Text="{Binding PrivateKeyText, Mode=TwoWay}"
                         ReturnCommand="{Binding PrivateKeyReturnCommand}"
@@ -93,7 +94,7 @@
                 </Frame>
             </AbsoluteLayout>
             <AbsoluteLayout
-                Padding="0, 15, 0, 0"
+                Padding="0, 10, 0, 0"
                 HeightRequest="90">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
@@ -105,30 +106,59 @@
                 <Button
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
+                    FontSize="20"
                     Text="Load Keystore File"
                     FontFamily="PrototypeFont"
                     BackgroundColor="Transparent"
                     Command="{Binding KeystoreCommand}">
                 </Button>
             </AbsoluteLayout>
-            <AbsoluteLayout
-                Padding="0, 30, 0, 0"
-                HeightRequest="60">
+            <AbsoluteLayout>
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
-                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.5, 1"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.5, 0.75"
                     CornerRadius="35"
                     HasShadow="True"
                     BorderColor="DodgerBlue">
+                    <StackLayout>
+                        <AbsoluteLayout
+                                HeightRequest="60">
+                            <Frame
+                                AbsoluteLayout.LayoutFlags="All"
+                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+                                CornerRadius="35"
+                                HasShadow="True"
+                                BorderColor="DodgerBlue">
+                            </Frame>
+                            <Button
+                                AbsoluteLayout.LayoutFlags="All"
+                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+                                FontSize="25"
+                                Text="{Binding EndpointText, Mode=TwoWay}"
+                                FontFamily="PrototypeFont"
+                                BackgroundColor="Transparent">
+                            </Button>
+                        </AbsoluteLayout>
+                        <AbsoluteLayout
+                                HeightRequest="45">
+                            <Frame
+                                AbsoluteLayout.LayoutFlags="All"
+                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+                                CornerRadius="35"
+                                HasShadow="True"
+                                BorderColor="DodgerBlue">
+                            </Frame>
+                            <Button
+                                AbsoluteLayout.LayoutFlags="All"
+                                AbsoluteLayout.LayoutBounds="0.5, 0.5, 1.25, 1"
+                                Text="Choose Endpoint"
+                                FontFamily="PrototypeFont"
+                                BackgroundColor="Transparent"
+                                Command="{Binding ChooseEndpointPressed}">
+                            </Button>
+                        </AbsoluteLayout>
+                    </StackLayout>
                 </Frame>
-                <Button
-                    AbsoluteLayout.LayoutFlags="All"
-                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
-                    Text="Choose Endpoint"
-                    FontFamily="PrototypeFont"
-                    BackgroundColor="Transparent"
-                    Command="{Binding ChooseEndpointPressed}">
-                </Button>
             </AbsoluteLayout>
         </StackLayout>
     </ContentPage.Content>

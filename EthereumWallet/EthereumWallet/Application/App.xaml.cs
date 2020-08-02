@@ -13,7 +13,9 @@ namespace EthereumWallet.ApplicationBase
     public partial class App : Application
     {
         public static IRepository<Settings> SettingsRepository { get; private set; }
-        public static Settings Settings { get; private set; }
+        public static Settings Settings { get; set; }
+        public static EventHandler SettingsChangedEvent { get; set; }
+
         public static IContainer Container { get; private set; }
 
         private readonly NavigationPage _navigationPage;
@@ -43,23 +45,19 @@ namespace EthereumWallet.ApplicationBase
                    .SingleInstance();
 
             Container = builder.Build();
+
             SettingsRepository = Container.Resolve<IRepository<Settings>>();
-        }
-
-        protected override async void OnStart()
-        {
-            await InitializeSettings();
-            MainPage = _navigationPage;
-            await _navigationPage.PushAsync(Container.Resolve<LoginView>());
-        }
-
-        private static async Task InitializeSettings()
-        {
-            Settings = await SettingsRepository.GetFirstOrDefault();
+            Settings = SettingsRepository.GetFirstOrDefault().Result;
             if (Settings is null)
             {
                 Settings = new Settings();
             }
+        }
+
+        protected override async void OnStart()
+        {
+            MainPage = _navigationPage;
+            await _navigationPage.PushAsync(Container.Resolve<LoginView>());
         }
     }
 }

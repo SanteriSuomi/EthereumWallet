@@ -1,4 +1,5 @@
-﻿using EthereumWallet.Common.Data;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Data;
 using EthereumWallet.Common.Extensions;
 using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking;
@@ -22,7 +23,11 @@ namespace EthereumWallet.Modules.Wallet.Info
             _navigationService = navigationService;
             TokenListItemPressed = new Command<Token>((t) => OnTokenListItemPressed(t).SafeFireAndForget(true));
             RefreshPressed = new Command(() => OnRefreshPressed().SafeFireAndForget(true));
-            UpdateWalletInfo().SafeFireAndForget(true);
+        }
+
+        public override async Task InitializeAsync(object parameter)
+        {
+            await UpdateWalletInfo();
         }
 
         private AddressInfo _info;
@@ -66,8 +71,14 @@ namespace EthereumWallet.Modules.Wallet.Info
 
         private async Task UpdateWalletInfo()
         {
-            Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri($"getAddressInfo/{_web3Service.Account.Address}"));
-            Tokens = new ObservableCollection<Token>(Info.tokens);
+            Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account.Address}"));
+            if (Info.tokens != null)
+            {
+                Tokens = new ObservableCollection<Token>(Info.tokens);
+            }
+            
+            OnPropertyChanged(nameof(Info));
+            OnPropertyChanged(nameof(Tokens));
         }
     }
 }

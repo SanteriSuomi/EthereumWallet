@@ -33,13 +33,18 @@ namespace EthereumWallet.Common.Navigation
                 await baseView.InitializeAsync(parameter);
                 return true;
             }
-
+            
             return false;
         }
 
-        public async Task PopAsync()
+        public async Task PopAsync(bool animated = true)
         {
-            await _navigation.Value.PopAsync();
+            await _navigation.Value.PopAsync(animated);
+        }
+
+        public async Task PopToRootAsync(bool animated = true)
+        {
+            await _navigation.Value.PopToRootAsync(animated);
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using EthereumWallet.Common.Settings;
 using EthereumWallet.Modules.Base;
 using EthereumWallet.Modules.WalletRoot;
 using Plugin.FilePicker;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -25,6 +26,8 @@ namespace EthereumWallet.Modules.Login
             PrivateKeyTextChangedCommand = new Command<TextChangedEventArgs>((args) => OnPrivateKeyTextChanged(args).SafeFireAndForget());
             KeystoreCommand = new Command(() => OnKeystoreClicked().SafeFireAndForget());
             ChooseEndpointPressed = new Command(() => OnChooseEndpointPressed().SafeFireAndForget());
+            MessagingCenter.Subscribe<LoginView>(this, "OnAppearing", (l) => OnViewAppearing().SafeFireAndForget());
+            App.SettingsChangedEvent += OnSettingsChanged;
         }
 
         public ICommand PrivateKeyReturnCommand { get; set; }
@@ -83,6 +86,17 @@ namespace EthereumWallet.Modules.Login
             set
             {
                 _privateKeyText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _endpointText;
+        public string EndpointText
+        {
+            get => _endpointText;
+            set
+            {
+                _endpointText = value;
                 OnPropertyChanged();
             }
         }
@@ -151,19 +165,38 @@ namespace EthereumWallet.Modules.Login
 
         private async Task OnChooseEndpointPressed()
         {
-            var input = await _dialogService.DisplayActionSheet("Choose Endpoint", null, "Mainnet", "Kovan");
+            var input = await _dialogService.DisplayActionSheet("Choose Endpoint", null, null, "Mainnet", "Kovan");
+            if (string.IsNullOrEmpty(input)) return;
+
             switch (input)
             {
                 case "Mainnet":
                     App.Settings.Endpoint = Endpoint.Mainnet;
                     break;
                 case "Kovan":
-                    App.Settings.Endpoint = Endpoint.Mainnet;
+                    App.Settings.Endpoint = Endpoint.Kovan;
                     break;
             }
 
-            _web3Service.UpdateClient();
+            _web3Service.UpdateClient(App.Settings.Endpoint);
             await App.SettingsRepository.SaveAsync(App.Settings);
+        }
+
+        private async Task OnViewAppearing()
+        {
+            if (string.IsNullOrEmpty(EndpointText))
+            {
+                EndpointText = App.Settings.Endpoint.ToString();
+            }
+            
+            await _navigationService.PopToRootAsync();
+        }
+
+        private void OnSettingsChanged(object sender, EventArgs _)
+        {
+            var settings = sender as Settings;
+            EndpointText = settings.Endpoint.ToString();
+            _web3Service.UpdateClient(settings.Endpoint);
         }
     }
 }

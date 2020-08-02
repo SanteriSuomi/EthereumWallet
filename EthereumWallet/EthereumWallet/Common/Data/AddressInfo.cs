@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace EthereumWallet.Common.Data
 {
-    #pragma warning disable // Objects converted from JSON as per api requirements
+#pragma warning disable // Objects converted from JSON as per api requirements
     public class Price
     {
         public double rate { get; set; }
@@ -15,16 +17,48 @@ namespace EthereumWallet.Common.Data
         public double diff30d { get; set; }
     }
 
-    public class ETH
+    public class ETH : INotifyPropertyChanged
     {
-        public double balance { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private double _balance;
+        public double balance
+        {
+            get => _balance;
+            set
+            {
+                _balance = value;
+                OnPropertyChanged();
+            }
+        }
         public Price price { get; set; }
     }
 
     public class TokenInfo
     {
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         public string address { get; set; }
-        public string name { get; set; }
+        private string _name;
+        public string name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
         public string decimals { get; set; }
         public string symbol { get; set; }
         public string totalSupply { get; set; }
@@ -43,17 +77,47 @@ namespace EthereumWallet.Common.Data
         public string reddit { get; set; }
     }
 
-    public class Token
+    public class Token : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         public TokenInfo tokenInfo { get; set; }
-        public double balance { get; set; }
+        private double _balance;
+        public double balance
+        {
+            get => _balance;
+            set
+            {
+                _balance = value;
+                OnPropertyChanged();
+            }
+        }
         public int totalIn { get; set; }
         public int totalOut { get; set; }
     }
 
-    public class AddressInfo
+    public class AddressInfo : INotifyPropertyChanged
     {
-        public string address { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private string _address;
+        public string address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                OnPropertyChanged();
+            }
+        }
         public ETH ETH { get; set; }
         public int countTxs { get; set; }
         public IList<Token> tokens { get; set; }

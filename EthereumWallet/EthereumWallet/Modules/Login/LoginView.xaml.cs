@@ -11,5 +11,10 @@ namespace EthereumWallet.Modules.Login
             InitializeComponent();
             BindingContext = viewModel;
         }
+
+        protected override void OnAppearing()
+        {
+            MessagingCenter.Send(this, "OnAppearing");
+        }
     }
 }

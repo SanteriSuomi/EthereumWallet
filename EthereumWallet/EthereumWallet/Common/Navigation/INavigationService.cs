@@ -8,7 +8,8 @@ namespace EthereumWallet.Common.Navigation
     public interface INavigationService
     {
         Task<bool> PushAsync<TViewModel>(object parameter = null, bool animated = true) where TViewModel : BaseViewModel;
-        Task PopAsync();
+        Task PopAsync(bool animated = true);
+        Task PopToRootAsync(bool animated = true);
         IReadOnlyList<Page> NavigationStack { get; }
     }
 }

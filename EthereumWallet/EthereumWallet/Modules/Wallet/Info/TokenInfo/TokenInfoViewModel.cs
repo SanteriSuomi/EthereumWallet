@@ -1,4 +1,5 @@
-﻿using EthereumWallet.Common.Data;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Data;
 using EthereumWallet.Common.Networking;
 using EthereumWallet.Common.Networking.HTTP;
 using EthereumWallet.Modules.Base;
@@ -16,7 +17,7 @@ namespace EthereumWallet.Modules.Wallet.Info.TokenInfo
         public override async Task InitializeAsync(object parameter)
         {
             Token = parameter as Token;
-            var info = await _networkService.GetAsync<TokenInfoWithPrice>(ApiHelpers.GetEthplorerUri($"getTokenInfo/{Token.tokenInfo.address}"));
+            var info = await _networkService.GetAsync<TokenInfoWithPrice>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getTokenInfo/{Token.tokenInfo.address}"));
             TokenPrice = info.price;
             Title = $"Token: {Token.tokenInfo.name}";
         }

@@ -1,5 +1,7 @@
-﻿using EthereumWallet.Common.Database;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Database;
 using SQLite;
+using System;
 
 namespace EthereumWallet.Common.Settings
 {
@@ -7,6 +9,16 @@ namespace EthereumWallet.Common.Settings
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public Endpoint Endpoint { get; set; } = Endpoint.Mainnet;
+
+        private Endpoint _endpoint;
+        public Endpoint Endpoint
+        {
+            get => _endpoint;
+            set
+            {
+                _endpoint = value;
+                App.SettingsChangedEvent?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
 }
