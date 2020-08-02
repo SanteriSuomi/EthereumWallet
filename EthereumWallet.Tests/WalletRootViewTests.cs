@@ -5,6 +5,7 @@ using System;
 using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Forms.Mocks;
 using Xunit;
 
 namespace EthereumWallet.Tests
@@ -25,7 +26,7 @@ namespace EthereumWallet.Tests
         [Fact]
         public void XamlConstructor_initializes_pages_correctly()
         {
-            Xamarin.Forms.Mocks.MockForms.Init();
+            MockForms.Init();
             Application.Current = new App();
 
             var xamlByte = Convert.FromBase64String(walletRootViewXamlBase64);

@@ -71,7 +71,7 @@ namespace EthereumWallet.Modules.Wallet.Info
 
         private async Task UpdateWalletInfo()
         {
-            Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account.Address}"));
+            Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account?.Address}"));
             if (Info.tokens != null)
             {
                 Tokens = new ObservableCollection<Token>(Info.tokens);
