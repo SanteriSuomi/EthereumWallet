@@ -10,7 +10,7 @@
              NavigationPage.HasNavigationBar="False"
              IsEnabled="{Binding ContentPageTouchEnabled}"
              x:Name="contentPage">
-
+    
     <ContentPage.Content>
         <StackLayout>
             <AbsoluteLayout
@@ -159,6 +159,15 @@
                         </AbsoluteLayout>
                     </StackLayout>
                 </Frame>
+                <Button
+                    FontSize="17.5"
+                    TextColor="Black"
+                    Text="Dev Log"
+                    Command="{Binding DevLogButtonPressed}">
+                    <Button.Behaviors>
+                        <behaviours:OnlyInDebugButtonBehaviour></behaviours:OnlyInDebugButtonBehaviour>
+                    </Button.Behaviors>
+                </Button>
             </AbsoluteLayout>
         </StackLayout>
     </ContentPage.Content>

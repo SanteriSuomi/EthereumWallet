@@ -4,8 +4,10 @@ using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Common.Settings;
 using EthereumWallet.Modules.Login;
+using Serilog;
 using System;
-using System.Threading.Tasks;
+using System.IO;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace EthereumWallet.ApplicationBase
@@ -15,6 +17,8 @@ namespace EthereumWallet.ApplicationBase
         public static IRepository<Settings> SettingsRepository { get; private set; }
         public static Settings Settings { get; set; }
         public static EventHandler SettingsChangedEvent { get; set; }
+
+        public static string LogFilePath = Path.Combine(FileSystem.AppDataDirectory, "Logs/ethereumwalletlog.txt");
 
         public static IContainer Container { get; private set; }
 
@@ -45,6 +49,12 @@ namespace EthereumWallet.ApplicationBase
                    .SingleInstance();
 
             Container = builder.Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Debug()
+                .WriteTo.File(LogFilePath)
+                .CreateLogger();
 
             SettingsRepository = Container.Resolve<IRepository<Settings>>();
             Settings = SettingsRepository.GetFirstOrDefault().Result;

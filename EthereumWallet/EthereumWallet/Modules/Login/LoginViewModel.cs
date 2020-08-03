@@ -5,6 +5,7 @@ using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Common.Settings;
 using EthereumWallet.Modules.Base;
+using EthereumWallet.Modules.Dev.DevLog;
 using EthereumWallet.Modules.WalletRoot;
 using Plugin.FilePicker;
 using System;
@@ -26,6 +27,7 @@ namespace EthereumWallet.Modules.Login
             PrivateKeyTextChangedCommand = new Command<TextChangedEventArgs>((args) => OnPrivateKeyTextChanged(args).SafeFireAndForget());
             KeystoreCommand = new Command(() => OnKeystoreClicked().SafeFireAndForget());
             ChooseEndpointPressed = new Command(() => OnChooseEndpointPressed().SafeFireAndForget());
+            DevLogButtonPressed = new Command(() => OnDevLogButtonPressed().SafeFireAndForget());
             MessagingCenter.Subscribe<LoginView>(this, "OnAppearing", (l) => OnViewAppearing().SafeFireAndForget());
             App.SettingsChangedEvent += OnSettingsChanged;
         }
@@ -34,6 +36,7 @@ namespace EthereumWallet.Modules.Login
         public ICommand PrivateKeyTextChangedCommand { get; set; }
         public ICommand KeystoreCommand { get; set; }
         public ICommand ChooseEndpointPressed { get; set; }
+        public ICommand DevLogButtonPressed { get; set; }
 
         private bool _loadingIndicator;
         public bool LoadingIndicator
@@ -180,6 +183,11 @@ namespace EthereumWallet.Modules.Login
 
             _web3Service.UpdateClient(App.Settings.Endpoint);
             await App.SettingsRepository.SaveAsync(App.Settings);
+        }
+
+        private async Task OnDevLogButtonPressed()
+        {
+            await _navigationService.PushAsync<DevLogViewModel>();
         }
 
         private async Task OnViewAppearing()

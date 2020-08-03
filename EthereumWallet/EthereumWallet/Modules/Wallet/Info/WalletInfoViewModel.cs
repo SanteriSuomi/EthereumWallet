@@ -7,6 +7,8 @@ using EthereumWallet.Common.Networking.HTTP;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Modules.Base;
 using EthereumWallet.Modules.Wallet.Info.TokenInfo;
+using Serilog;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -71,14 +73,27 @@ namespace EthereumWallet.Modules.Wallet.Info
 
         private async Task UpdateWalletInfo()
         {
-            Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account?.Address}"));
-            if (Info.tokens != null)
+            try
             {
+                Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account.Address}"));
                 Tokens = new ObservableCollection<Token>(Info.tokens);
+
+                OnPropertyChanged(nameof(Info));
+                OnPropertyChanged(nameof(Tokens));
+                App.Settings = null;
             }
-            
-            OnPropertyChanged(nameof(Info));
-            OnPropertyChanged(nameof(Tokens));
+            catch (NullReferenceException e) when (App.Settings is null)
+            {
+                Log.Error(e, "App.Settings was null");
+            }
+            catch (NullReferenceException e) when (_web3Service.Account is null)
+            {
+                Log.Error(e, "_web3Service.Account was null");
+            }
+            catch (NotSupportedException e) when (Info.tokens is null)
+            {
+                Log.Warning(e, "Info.tokens was null");
+            }
         }
     }
 }
