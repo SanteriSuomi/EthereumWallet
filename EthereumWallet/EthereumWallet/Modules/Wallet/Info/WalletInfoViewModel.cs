@@ -9,6 +9,7 @@ using EthereumWallet.Modules.Base;
 using EthereumWallet.Modules.Wallet.Info.TokenInfo;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -54,6 +55,17 @@ namespace EthereumWallet.Modules.Wallet.Info
             }
         }
 
+        private bool _tokensListEnabled;
+        public bool TokenNoDataLabelEnabled
+        {
+            get => _tokensListEnabled;
+            set
+            {
+                _tokensListEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand TokenListItemPressed { get; set; }
         public ICommand RefreshPressed { get; set; }
 
@@ -76,11 +88,13 @@ namespace EthereumWallet.Modules.Wallet.Info
             try
             {
                 Info = await _networkService.GetAsync<AddressInfo>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getAddressInfo/{_web3Service.Account.Address}"));
-                Tokens = new ObservableCollection<Token>(Info.tokens);
+                var tokensExist = Info.tokens != null;
+                TokenNoDataLabelEnabled = !tokensExist;
+                Tokens = new ObservableCollection<Token>(Info.tokens ?? new List<Token>());
 
                 OnPropertyChanged(nameof(Info));
                 OnPropertyChanged(nameof(Tokens));
-                App.Settings = null;
+                OnPropertyChanged(nameof(TokenNoDataLabelEnabled));
             }
             catch (NullReferenceException e) when (App.Settings is null)
             {

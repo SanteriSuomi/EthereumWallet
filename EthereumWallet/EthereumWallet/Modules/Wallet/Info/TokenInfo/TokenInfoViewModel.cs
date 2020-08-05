@@ -17,9 +17,12 @@ namespace EthereumWallet.Modules.Wallet.Info.TokenInfo
         public override async Task InitializeAsync(object parameter)
         {
             Token = parameter as Token;
-            var info = await _networkService.GetAsync<TokenInfoWithPrice>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getTokenInfo/{Token.tokenInfo.address}"));
-            TokenPrice = info.price;
             Title = $"Token: {Token.tokenInfo.name}";
+            HasAlert = !string.IsNullOrEmpty(Token.tokenInfo.alert);
+            TokenPrice = new TokenInfoPrice();
+            var info = await _networkService.GetAsync<TokenInfoWithPrice>(ApiHelpers.GetEthplorerUri(App.Settings.Endpoint, $"getTokenInfo/{Token.tokenInfo.address}"));
+            TokenPriceDataEnabled = info != null;
+            TokenPrice = info.price;
         }
 
         private Token _token;
@@ -51,6 +54,28 @@ namespace EthereumWallet.Modules.Wallet.Info.TokenInfo
             set
             {
                 _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _tokenPriceDataEnabled;
+        public bool TokenPriceDataEnabled
+        {
+            get => _tokenPriceDataEnabled;
+            set
+            {
+                _tokenPriceDataEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _hasAlert;
+        public bool HasAlert
+        {
+            get => _hasAlert;
+            set
+            {
+                _hasAlert = value;
                 OnPropertyChanged();
             }
         }

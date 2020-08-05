@@ -27,7 +27,7 @@ namespace EthereumWallet.Tests
         public void XamlConstructor_initializes_pages_correctly()
         {
             MockForms.Init();
-            Application.Current = new App();
+            Application.Current = new App(isTest: true);
 
             var xamlByte = Convert.FromBase64String(walletRootViewXamlBase64);
             var xamlString = Encoding.UTF8.GetString(xamlByte);

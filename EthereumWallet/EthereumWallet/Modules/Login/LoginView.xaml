@@ -66,7 +66,7 @@
             </Label>
             <AbsoluteLayout
                 Padding="0, 7.5, 0, 0"
-                HeightRequest="90">
+                HeightRequest="100">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
@@ -95,7 +95,7 @@
             </AbsoluteLayout>
             <AbsoluteLayout
                 Padding="0, 10, 0, 0"
-                HeightRequest="90">
+                HeightRequest="100">
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.75, 1"
@@ -116,13 +116,13 @@
             <AbsoluteLayout>
                 <Frame
                     AbsoluteLayout.LayoutFlags="All"
-                    AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.5, 0.75"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.4, 0.5, 0.75"
                     CornerRadius="35"
                     HasShadow="True"
                     BorderColor="DodgerBlue">
                     <StackLayout>
                         <AbsoluteLayout
-                                HeightRequest="60">
+                            HeightRequest="60">
                             <Frame
                                 AbsoluteLayout.LayoutFlags="All"
                                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
@@ -140,7 +140,7 @@
                             </Button>
                         </AbsoluteLayout>
                         <AbsoluteLayout
-                                HeightRequest="45">
+                            HeightRequest="45">
                             <Frame
                                 AbsoluteLayout.LayoutFlags="All"
                                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"

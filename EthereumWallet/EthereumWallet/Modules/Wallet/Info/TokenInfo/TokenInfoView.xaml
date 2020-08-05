@@ -3,15 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:EthereumWallet.Common.Converters"
              mc:Ignorable="d"
              x:Class="EthereumWallet.Modules.Wallet.Info.TokenInfo.TokenInfoView"
              Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:TokenPriceAvailableSupplyEmptyConverter
+                x:Key="tokenPriceConverter">
+            </converters:TokenPriceAvailableSupplyEmptyConverter>
+            <converters:BoolToOppositeBoolConverter
+                x:Key="boolToOppositeConverter">
+            </converters:BoolToOppositeBoolConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     
     <ContentPage.Content>
         <ScrollView>
             <StackLayout
                 Padding="0, 7.5, 0, 0">
-                <Expander>
+                <Frame
+                    IsVisible="{Binding HasAlert}"
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Vertical">
+                        <Label
+                            WidthRequest="225"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Red"
+                            FontFamily="PrototypeFont"
+                            FontSize="40"
+                            Text="Token Alert">
+                        </Label>
+                        <Label
+                            MinimumWidthRequest="300"
+                            MinimumHeightRequest="300"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            TextColor="Black"
+                            FontSize="22.5"
+                            Text="{Binding Token.tokenInfo.alert}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
+                <Expander
+                    IsEnabled="{Binding TokenPriceDataEnabled}">
                     <Expander.Header>
                         <Frame
                             Margin="5, 0, 5, 0"
@@ -29,6 +72,17 @@
                                     FontFamily="PrototypeFont"
                                     FontSize="40"
                                     Text="Price Details">
+                                </Label>
+                                <Label
+                                    IsVisible="{Binding TokenPriceDataEnabled, Converter={StaticResource boolToOppositeConverter}}"
+                                    Padding="20, 10, 0, 0"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="Black"
+                                    FontSize="20"
+                                    Text="No Data">
                                 </Label>
                             </StackLayout>
                         </Frame>
@@ -303,7 +357,7 @@
                             LineBreakMode="CharacterWrap"
                             TextColor="Black"
                             FontSize="22.5"
-                            Text="{Binding TokenPrice.availableSupply}">
+                            Text="{Binding TokenPrice.availableSupply, Converter={StaticResource tokenPriceConverter}}">
                         </Label>
                     </StackLayout>
                 </Frame>

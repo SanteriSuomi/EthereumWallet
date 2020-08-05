@@ -14,6 +14,9 @@
             <converters:DoubleToStringConverter 
                 x:Key="doubleToString">
             </converters:DoubleToStringConverter>
+            <converters:BoolToOppositeBoolConverter
+                x:Key="boolToOppositeConverter">
+            </converters:BoolToOppositeBoolConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -34,8 +37,9 @@
                     CornerRadius="20"
                     BorderColor="Black">
                     <StackLayout
-                        Orientation="Horizontal">
+                        Orientation="Vertical">
                         <Label
+                            HeightRequest="45"
                             HorizontalOptions="Center"
                             VerticalOptions="Center"
                             HorizontalTextAlignment="Center"
@@ -46,16 +50,16 @@
                             Text="Address">
                         </Label>
                         <Label
-                            HeightRequest="85"
-                            WidthRequest="190"
-                            Padding="20, 7.5, 0, 0"
+                            HeightRequest="80"
+                            WidthRequest="350"
+                            Padding="15, 7.5, 0, 0"
                             HorizontalOptions="Center"
                             VerticalOptions="Center"
                             HorizontalTextAlignment="Center"
                             VerticalTextAlignment="Center"
                             LineBreakMode="CharacterWrap"
                             TextColor="Black"
-                            FontSize="20"
+                            FontSize="25"
                             Text="{Binding Info.address}">
                         </Label>
                     </StackLayout>
@@ -90,6 +94,36 @@
                         </Label>
                     </StackLayout>
                 </Frame>
+                <Frame
+                    Margin="5, 0, 5, 0"
+                    HasShadow="True"
+                    CornerRadius="20"
+                    BorderColor="Black">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            TextColor="Black"
+                            FontFamily="PrototypeFont"
+                            FontSize="30"
+                            Text="Transaction Count">
+                        </Label>
+                        <Label
+                            Padding="22, 4, 0, 0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            LineBreakMode="TailTruncation"
+                            TextColor="Black"
+                            FontSize="25"
+                            Text="{Binding Info.countTxs, Converter={StaticResource doubleToString}}">
+                        </Label>
+                    </StackLayout>
+                </Frame>
                 <Expander>
                     <Expander.Header>
                         <Frame
@@ -97,16 +131,30 @@
                             HasShadow="True"
                             CornerRadius="20"
                             BorderColor="Black">
-                            <Label
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                HorizontalTextAlignment="Center"
-                                VerticalTextAlignment="Center"
-                                TextColor="Black"
-                                FontFamily="PrototypeFont"
-                                FontSize="40"
-                                Text="Tokens">
-                            </Label>
+                            <StackLayout
+                                Orientation="Horizontal">
+                                <Label
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="Black"
+                                    FontFamily="PrototypeFont"
+                                    FontSize="40"
+                                    Text="Tokens">
+                                </Label>
+                                <Label
+                                    IsVisible="{Binding TokenNoDataLabelEnabled}"
+                                    Padding="50, 7.5, 0, 0"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    TextColor="Red"
+                                    FontSize="20"
+                                    Text="No Tokens">
+                                </Label>
+                            </StackLayout>
                         </Frame>
                     </Expander.Header>
                     <CollectionView

@@ -17,7 +17,7 @@ namespace EthereumWallet.Tests
         public async Task InitializeAsync_initializes_view_correctly()
         {
             MockForms.Init();
-            Application.Current = new App();
+            Application.Current = new App(isTest: true);
             var model = new TokenInfoViewModel(new NetworkService());
 
             await model.InitializeAsync(new Token()

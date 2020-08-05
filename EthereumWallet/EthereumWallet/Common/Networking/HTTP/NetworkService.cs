@@ -9,7 +9,10 @@ namespace EthereumWallet.Common.Networking.HTTP
     {
         public NetworkService()
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient()
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            };
         }
 
         private readonly HttpClient _httpClient;

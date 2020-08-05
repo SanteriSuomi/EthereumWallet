@@ -18,13 +18,13 @@ namespace EthereumWallet.ApplicationBase
         public static Settings Settings { get; set; }
         public static EventHandler SettingsChangedEvent { get; set; }
 
-        public static string LogFilePath = Path.Combine(FileSystem.AppDataDirectory, "Logs/ethereumwalletlog.txt");
+        public static string LogFilePath { get; private set; }
 
         public static IContainer Container { get; private set; }
 
         private readonly NavigationPage _navigationPage;
 
-        public App()
+        public App(bool isTest)
         {
             InitializeComponent();
 
@@ -49,12 +49,16 @@ namespace EthereumWallet.ApplicationBase
                    .SingleInstance();
 
             Container = builder.Build();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Debug()
-                .WriteTo.File(LogFilePath)
-                .CreateLogger();
+            
+            if (!isTest)
+            {
+                LogFilePath = Path.Combine(FileSystem.AppDataDirectory, "Logs/ethereumwalletlog.txt");
+                Log.Logger = new LoggerConfiguration()
+                             .MinimumLevel.Debug()
+                             .WriteTo.Debug()
+                             .WriteTo.File(LogFilePath)
+                             .CreateLogger();
+            }
 
             SettingsRepository = Container.Resolve<IRepository<Settings>>();
             Settings = SettingsRepository.GetFirstOrDefault().Result;

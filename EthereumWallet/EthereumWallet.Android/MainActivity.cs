@@ -18,7 +18,7 @@ namespace EthereumWallet.Droid
             Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new ApplicationBase.App());
+            LoadApplication(new ApplicationBase.App(isTest: false));
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
