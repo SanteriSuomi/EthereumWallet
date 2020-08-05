@@ -1,12 +1,15 @@
-﻿using EthereumWallet.Common.Dialogs;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Dialogs;
 using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
+using EthereumWallet.Common.Settings;
 using EthereumWallet.Modules.Login;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xunit;
+using Xamarin.Forms.Mocks;
 
 namespace EthereumWallet.Tests
 {
@@ -86,9 +89,20 @@ namespace EthereumWallet.Tests
             _viewModel.KeystoreCommand.Execute(privateKey);
         }
 
-        /// <summary>
-        /// Mimic LoginViewModel TrySetPrivateKey method.
-        /// </summary>
+        [Fact]
+        public void ChooseEndpointPressed_is_executed_correctly()
+        {
+            MockForms.Init();
+            Application.Current = new App(isTest: true);
+            _viewModel.ChooseEndpointPressed = new Command(async () =>
+            {
+                var result = await OnChooseEndpointPressed();
+                Assert.True(result);
+            });
+
+            _viewModel.ChooseEndpointPressed.Execute(null);
+        }
+
         private async Task<bool> TrySetPrivateKey(string privateKey)
         {
             if (string.IsNullOrEmpty(privateKey))
@@ -110,9 +124,6 @@ namespace EthereumWallet.Tests
             return false;
         }
 
-        /// <summary>
-        /// Mimic LoginViewModel OnKeystoreClicked method.
-        /// </summary>
         private async Task<bool> OnKeystoreClicked()
         {
             var fileData = Convert.FromBase64String(keystore);
@@ -124,6 +135,19 @@ namespace EthereumWallet.Tests
             }
 
             return false;
+        }
+
+        private async Task<bool> OnChooseEndpointPressed()
+        {
+            var input = "Mainnet";
+            switch (input)
+            {
+                case "Mainnet":
+                    App.Settings.Endpoint = Endpoint.Mainnet;
+                    break;
+            }
+
+            return App.Settings.Endpoint == Endpoint.Mainnet;
         }
     }
 }
