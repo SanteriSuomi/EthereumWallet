@@ -20,7 +20,6 @@ namespace EthereumWallet.Modules.Dev.DevLog
         public ICommand RefreshLogPressed { get; set; }
         public ICommand ClearLogPressed { get; set; }
 
-
         private string _logText;
         public string LogText
         {
