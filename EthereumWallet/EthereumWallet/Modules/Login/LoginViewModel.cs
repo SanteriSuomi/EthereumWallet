@@ -12,7 +12,9 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using Plugin.FilePicker.Abstractions;
 
 namespace EthereumWallet.Modules.Login
 {
@@ -23,13 +25,14 @@ namespace EthereumWallet.Modules.Login
             _web3Service = web3Service;
             _navigationService = navigationService;
             _dialogService = dialogService;
-            PrivateKeyReturnCommand = new Command<string>((s) => OnPrivateKeyReturn(s).SafeFireAndForget());
-            PrivateKeyTextChangedCommand = new Command<TextChangedEventArgs>((args) => OnPrivateKeyTextChanged(args).SafeFireAndForget());
-            KeystoreCommand = new Command(() => OnKeystoreClicked().SafeFireAndForget());
-            ChooseEndpointPressed = new Command(() => OnChooseEndpointPressed().SafeFireAndForget());
-            DevLogButtonPressed = new Command(() => OnDevLogButtonPressed().SafeFireAndForget());
-            MessagingCenter.Subscribe<LoginView>(this, "OnAppearing", (l) => OnViewAppearing().SafeFireAndForget());
+            PrivateKeyReturnCommand = new Command<string>((s) => OnPrivateKeyReturn(s).SafeFireAndForget(true));
+            PrivateKeyTextChangedCommand = new Command<TextChangedEventArgs>((args) => OnPrivateKeyTextChanged(args).SafeFireAndForget(true));
+            KeystoreCommand = new Command(() => OnKeystoreClicked().SafeFireAndForget(true));
+            ChooseEndpointPressed = new Command(() => OnChooseEndpointPressed().SafeFireAndForget(true));
+            DevLogButtonPressed = new Command(() => OnDevLogButtonPressed().SafeFireAndForget(true));
+            MessagingCenter.Subscribe<LoginView>(this, "OnAppearing", (l) => OnViewAppearing().SafeFireAndForget(true));
             App.SettingsChangedEvent += OnSettingsChanged;
+            Connectivity.ConnectivityChanged += OnNetworkAccessChanged;
         }
 
         public ICommand PrivateKeyReturnCommand { get; set; }
@@ -104,6 +107,17 @@ namespace EthereumWallet.Modules.Login
             }
         }
 
+        private bool _noInternetConnectionVisible;
+        public bool NoInternetConnectionVisible
+        {
+            get => _noInternetConnectionVisible;
+            set
+            {
+                _noInternetConnectionVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         private readonly IWeb3Service _web3Service;
         private readonly INavigationService _navigationService;
         private readonly IDialogService _dialogService;
@@ -120,12 +134,19 @@ namespace EthereumWallet.Modules.Login
 
         private async Task TrySetPrivateKey(string text)
         {
+            if (!HasInternetAccess()) return;
+
             if (string.IsNullOrEmpty(text))
             {
                 PrivateKeyInfoLabelEnabled = false;
                 return;
             }
 
+            await AttemptAccountCreationUsingPrivateKey(text);
+        }
+
+        private async Task AttemptAccountCreationUsingPrivateKey(string text)
+        {
             if (text.Length < 64)
             {
                 PrivateKeyInfoLabelText = "Private key is too short.";
@@ -144,26 +165,56 @@ namespace EthereumWallet.Modules.Login
 
         private async Task OnKeystoreClicked()
         {
+            if (!HasInternetAccess()) return;
+
             var fileData = await CrossFilePicker.Current.PickFile();
             if (fileData != null)
             {
                 LoadingIndicator = true;
                 ContentPageTouchEnabled = false;
-
-                var fileContents = await Task.Run(() => Encoding.UTF8.GetString(fileData.DataArray));
-                var userInput = await _dialogService.DisplayPrompt("Password", "Please enter keystore password.");
-                var result = await _web3Service.TrySetAccountKeystore(fileContents, userInput);
-                if (result)
-                {
-                    LoadingIndicator = false;
-                    ContentPageTouchEnabled = true;
-
-                    await _navigationService.PushAsync<WalletRootViewModel>(null, true);
-                }
+                await AttemptAccountCreationUsingKeystore(fileData);
             }
 
             LoadingIndicator = false;
             ContentPageTouchEnabled = true;
+        }
+
+        private async Task AttemptAccountCreationUsingKeystore(FileData fileData)
+        {
+            var fileContents = await Task.Run(() => Encoding.UTF8.GetString(fileData.DataArray));
+            var userInput = await _dialogService.DisplayPrompt("Password", "Please enter keystore password.");
+            var result = await _web3Service.TrySetAccountKeystore(fileContents, userInput);
+            if (result)
+            {
+                LoadingIndicator = false;
+                ContentPageTouchEnabled = true;
+                await _navigationService.PushAsync<WalletRootViewModel>(null, true);
+            }
+        }
+
+        private void OnNetworkAccessChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            UpdateNoInternetAccessLabel(e.NetworkAccess == NetworkAccess.Internet);
+        }
+
+        private bool HasInternetAccess()
+        {
+            var networkAccess = Connectivity.NetworkAccess;
+            var hasNetwork = networkAccess == NetworkAccess.Internet;
+            UpdateNoInternetAccessLabel(hasNetwork);
+            return hasNetwork;
+        }
+
+        private void UpdateNoInternetAccessLabel(bool? hasNetwork = null)
+        {
+            if (hasNetwork.HasValue)
+            {
+                NoInternetConnectionVisible = !hasNetwork.Value;
+            }
+            else
+            {
+                NoInternetConnectionVisible = Connectivity.NetworkAccess != NetworkAccess.Internet;
+            }
         }
 
         private async Task OnChooseEndpointPressed()
@@ -197,6 +248,7 @@ namespace EthereumWallet.Modules.Login
                 EndpointText = App.Settings.Endpoint.ToString();
             }
             
+            UpdateNoInternetAccessLabel();
             await _navigationService.PopToRootAsync();
         }
 
@@ -205,6 +257,13 @@ namespace EthereumWallet.Modules.Login
             var settings = sender as Settings;
             EndpointText = settings.Endpoint.ToString();
             _web3Service.UpdateClient(settings.Endpoint);
+        }
+
+        ~LoginViewModel()
+        {
+            MessagingCenter.Unsubscribe<LoginView>(this, "OnAppearing");
+            App.SettingsChangedEvent -= OnSettingsChanged;
+            Connectivity.ConnectivityChanged -= OnNetworkAccessChanged;
         }
     }
 }

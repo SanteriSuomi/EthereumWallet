@@ -41,14 +41,24 @@ namespace EthereumWallet.Common.Data
 
     public class TokenInfo
     {
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public string address { get; set; }
+        private string _address;
+
+        public string address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                OnPropertyChanged();
+            }
+
+        }
         private string _name;
         public string name
         {
@@ -84,8 +94,16 @@ namespace EthereumWallet.Common.Data
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        public TokenInfo tokenInfo { get; set; }
+        private TokenInfo _tokenInfo;
+        public TokenInfo tokenInfo
+        {
+            get => _tokenInfo;
+            set
+            {
+                _tokenInfo = value;
+                OnPropertyChanged();
+            }
+        }
         private double _balance;
         public double balance
         {
@@ -118,8 +136,35 @@ namespace EthereumWallet.Common.Data
                 OnPropertyChanged();
             }
         }
-        public ETH ETH { get; set; }
-        public int countTxs { get; set; }
-        public IList<Token> tokens { get; set; }
+        private ETH _eth;
+        public ETH ETH
+        {
+            get => _eth;
+            set
+            {
+                _eth = value;
+                OnPropertyChanged();
+            }
+        }
+        private int _countTxs;
+        public int countTxs
+        {
+            get => _countTxs;
+            set
+            {
+                _countTxs = value;
+                OnPropertyChanged();
+            }
+        }
+        private IList<Token> _tokens;
+        public IList<Token> tokens
+        {
+            get => _tokens;
+            set
+            {
+                _tokens = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

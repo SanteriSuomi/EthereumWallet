@@ -58,6 +58,15 @@
                 </Label>
             </AbsoluteLayout>
             <Label
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                FontFamily="PrototypeFont"
+                FontSize="25"
+                TextColor="Black"
+                Text="No Internet Connection"
+                IsVisible="{Binding NoInternetConnectionVisible}">
+            </Label>
+            <Label
                 HorizontalTextAlignment="Center"
                 FontSize="35"
                 TextColor="Black"

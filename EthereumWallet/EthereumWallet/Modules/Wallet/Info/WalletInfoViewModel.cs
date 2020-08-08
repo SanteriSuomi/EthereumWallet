@@ -11,6 +11,8 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -25,7 +27,7 @@ namespace EthereumWallet.Modules.Wallet.Info
             _networkService = networkService;
             _navigationService = navigationService;
             TokenListItemPressed = new Command<Token>((t) => OnTokenListItemPressed(t).SafeFireAndForget(true));
-            RefreshPressed = new Command(() => OnRefreshPressed().SafeFireAndForget(true));
+            RefreshPressed = new Command(() => Device.BeginInvokeOnMainThread(() => OnRefreshPressed().SafeFireAndForget(true)));
         }
 
         public override async Task InitializeAsync(object parameter)
@@ -91,23 +93,40 @@ namespace EthereumWallet.Modules.Wallet.Info
                 var tokensExist = Info.tokens != null;
                 TokenNoDataLabelEnabled = !tokensExist;
                 Tokens = new ObservableCollection<Token>(Info.tokens ?? new List<Token>());
-
-                OnPropertyChanged(nameof(Info));
-                OnPropertyChanged(nameof(Tokens));
-                OnPropertyChanged(nameof(TokenNoDataLabelEnabled));
             }
             catch (NullReferenceException e) when (App.Settings is null)
             {
-                Log.Error(e, "App.Settings was null");
+                Log.Error(e, "App.Settings was null.");
             }
             catch (NullReferenceException e) when (_web3Service.Account is null)
             {
-                Log.Error(e, "_web3Service.Account was null");
+                Log.Error(e, "_web3Service.Account was null.");
             }
             catch (NotSupportedException e) when (Info.tokens is null)
             {
-                Log.Warning(e, "Info.tokens was null");
+                Log.Warning(e, "Info.tokens was null.");
             }
+            finally
+            {
+                NotifyPropertiesChanged();
+            }
+        }
+
+        private void NotifyPropertiesChanged()
+        {
+            List<PropertyInfo> properties = GetProperties();
+            foreach (var property in properties)
+            {
+                OnPropertyChanged(property.Name);
+            }
+        }
+
+        private List<PropertyInfo> GetProperties()
+        {
+            var properties = Info.GetType().GetProperties().ToList();
+            properties.AddRange(Tokens.GetType().GetProperties());
+            properties.AddRange(GetType().GetProperties());
+            return properties;
         }
     }
 }

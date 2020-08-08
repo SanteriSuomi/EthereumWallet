@@ -13,7 +13,7 @@ namespace EthereumWallet.Common.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return !(bool)value;
         }
     }
 }

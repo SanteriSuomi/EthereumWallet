@@ -60,7 +60,7 @@
                             LineBreakMode="CharacterWrap"
                             TextColor="Black"
                             FontSize="25"
-                            Text="{Binding Info.address}">
+                            Text="{Binding Info.address, Mode=TwoWay}">
                         </Label>
                     </StackLayout>
                 </Frame>
@@ -90,7 +90,7 @@
                             LineBreakMode="TailTruncation"
                             TextColor="Black"
                             FontSize="25"
-                            Text="{Binding Info.ETH.balance, Converter={StaticResource doubleToString}}">
+                            Text="{Binding Info.ETH.balance, Mode=TwoWay, Converter={StaticResource doubleToString}}">
                         </Label>
                     </StackLayout>
                 </Frame>
@@ -120,7 +120,7 @@
                             LineBreakMode="TailTruncation"
                             TextColor="Black"
                             FontSize="25"
-                            Text="{Binding Info.countTxs, Converter={StaticResource doubleToString}}">
+                            Text="{Binding Info.countTxs, Mode=TwoWay, Converter={StaticResource doubleToString}}">
                         </Label>
                     </StackLayout>
                 </Frame>
@@ -144,7 +144,7 @@
                                     Text="Tokens">
                                 </Label>
                                 <Label
-                                    IsVisible="{Binding TokenNoDataLabelEnabled}"
+                                    IsVisible="{Binding TokenNoDataLabelEnabled, Mode=TwoWay}"
                                     Padding="50, 7.5, 0, 0"
                                     HorizontalOptions="Center"
                                     VerticalOptions="Center"
@@ -158,11 +158,11 @@
                         </Frame>
                     </Expander.Header>
                     <CollectionView
-                        ItemsSource="{Binding Tokens}">
+                        ItemsSource="{Binding Tokens, Mode=TwoWay}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Grid 
-                                    HeightRequest="120"
+                                    HeightRequest="130"
                                     Padding="45, 0, 0, 0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="325"/>
@@ -187,8 +187,8 @@
                                                             FontSize="20"
                                                             FontFamily="PrototypeFont"
                                                             BackgroundColor="Transparent"
-                                                            Text="{Binding tokenInfo.name}"
-                                                            Command="{Binding Source={x:Reference page}, Path=BindingContext.TokenListItemPressed}"
+                                                            Text="{Binding tokenInfo.name, Mode=TwoWay}"
+                                                            Command="{Binding Source={x:Reference page}, Mode=TwoWay, Path=BindingContext.TokenListItemPressed}"
                                                             CommandParameter="{Binding .}">
                                                         </Button>
                                                     </AbsoluteLayout>
@@ -202,11 +202,11 @@
                                                             VerticalTextAlignment="Center"
                                                             TextColor="Black"
                                                             FontFamily="PrototypeFont"
-                                                            FontSize="20"
+                                                            FontSize="25"
                                                             Text="Balance">
                                                         </Label>
                                                         <Label
-                                                            Padding="10, 3, 0, 0"
+                                                            Padding="10, 4, 0, 0"
                                                             WidthRequest="150"
                                                             HorizontalOptions="Start"
                                                             VerticalOptions="Center"
@@ -214,9 +214,8 @@
                                                             VerticalTextAlignment="Center"
                                                             LineBreakMode="TailTruncation"
                                                             TextColor="Black"
-                                                            FontFamily="PrototypeFont"
                                                             FontSize="20"
-                                                            Text="{Binding balance}">
+                                                            Text="{Binding balance, Mode=TwoWay}">
                                                         </Label>
                                                     </StackLayout>
                                                 </StackLayout>
