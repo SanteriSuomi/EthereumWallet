@@ -14,7 +14,6 @@ namespace EthereumWallet.Common.Extensions
             {
                 for (int i = 2; i < s.Length; i++)
                 {
-                    var digit = s[i];
                     if (!Uri.IsHexDigit(s[i]))
                     {
                         return false;

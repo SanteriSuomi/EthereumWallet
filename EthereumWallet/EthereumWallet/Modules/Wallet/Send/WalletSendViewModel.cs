@@ -4,6 +4,7 @@ using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Modules.Base;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Signer;
+using Nethereum.Util;
 using Nethereum.Web3;
 using System;
 using System.Globalization;
@@ -48,9 +49,10 @@ namespace EthereumWallet.Modules.Wallet.Send
         {
             var publicAddress = _web3Service.Account.Address;
             var privateKey = _web3Service.Account.PrivateKey;
+            //TODO: fix nonce (transaction count) since GetTransactionCount seems not to work (use transaction count from info view/ethplorer api?)
             var transactionCount = await _web3Service.Client.Eth.Transactions.GetTransactionCount.SendRequestAsync(publicAddress);
 
-            var amount = new BigInteger(decimalAmount);
+            var amount = Web3.Convert.ToWei(decimalAmount);
             var nonce = new BigInteger(transactionCount);
 
             var (verified, encoded) = TrySignAndVerifyTransaction(toAddress, privateKey, amount, nonce);
@@ -65,7 +67,7 @@ namespace EthereumWallet.Modules.Wallet.Send
 
                 return (false, null);
             }
-
+            
             return (false, null);
         }
 
