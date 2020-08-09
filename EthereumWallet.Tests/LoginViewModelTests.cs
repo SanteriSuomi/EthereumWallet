@@ -1,6 +1,5 @@
 ﻿using EthereumWallet.ApplicationBase;
 using EthereumWallet.Common.Dialogs;
-using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Common.Settings;
 using EthereumWallet.Modules.Login;
@@ -8,18 +7,15 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xunit;
 using Xamarin.Forms.Mocks;
+using Xunit;
 
 namespace EthereumWallet.Tests
 {
     public class LoginViewModelTests
     {
-        private readonly NavigationPage _navigationPage;
-        private readonly Lazy<INavigation> _lazyNavigation;
         private readonly Web3Service _web3Service;
-        private readonly NavigationService _navigationService;
-        private readonly LoginViewModel _viewModel;
+        private LoginViewModel _viewModel;
 
         private const string privateKey = "7355167d89a10238a9d31f5640e09e993de122e1775cdd5c3460ede9ee33b2e7";
 
@@ -34,33 +30,23 @@ namespace EthereumWallet.Tests
                                           MTA3MiwiciI6OCwicCI6MX0sIm1hYyI6IjMzYTMyOWY3OWVhNThiYWY3MzExNTdkMjA5NDc1YTRh
                                           ZTczODI1YTgxOTI1ZmRkM2ExMTAwNTFlYTMzZTAzYjcifX0=";
 
-
         public LoginViewModelTests()
         {
-            _navigationPage = new NavigationPage();
-            _lazyNavigation = new Lazy<INavigation>(() => _navigationPage.Navigation);
             _web3Service = new Web3Service();
-            _navigationService = new NavigationService(_lazyNavigation);
-            _viewModel = new LoginViewModel(_web3Service, _navigationService, new DialogService());
-        }
-
-        [Fact]
-        public void Constructor_initializes_model_correctly()
-        {
-            Assert.True(_viewModel.KeystoreCommand != null
-                        && _viewModel.PrivateKeyReturnCommand != null
-                        && _viewModel.PrivateKeyTextChangedCommand != null);
         }
 
         [Fact]
         #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task PrivateKeyReturnCommand_is_executed_correctly()
         {
-            _viewModel.PrivateKeyReturnCommand = new Command<string>(async (s) =>
+            _viewModel = new LoginViewModel
             {
-                var result = await TrySetPrivateKey(s);
-                Assert.True(result);
-            });
+                PrivateKeyReturnCommand = new Command<string>(async (s) =>
+                {
+                    var result = await TrySetPrivateKey(s);
+                    Assert.True(result);
+                })
+            };
 
             _viewModel.PrivateKeyReturnCommand.Execute(privateKey);
         }
@@ -68,11 +54,14 @@ namespace EthereumWallet.Tests
         [Fact]
         public void PrivateKeyTextChangedCommand_is_executed_correctly()
         {
-            _viewModel.PrivateKeyTextChangedCommand = new Command<string>(async (s) =>
+            _viewModel = new LoginViewModel
             {
-                var result = await TrySetPrivateKey(s);
-                Assert.True(result);
-            });
+                PrivateKeyTextChangedCommand = new Command<string>(async (s) =>
+                {
+                    var result = await TrySetPrivateKey(s);
+                    Assert.True(result);
+                })
+            };
 
             _viewModel.PrivateKeyTextChangedCommand.Execute(privateKey);
         }
@@ -80,11 +69,14 @@ namespace EthereumWallet.Tests
         [Fact]
         public void KeystoreCommand_is_executed_correctly()
         {
-            _viewModel.KeystoreCommand = new Command<string>(async (s) =>
+            _viewModel = new LoginViewModel(new DialogService())
             {
-                var result = await OnKeystoreClicked();
-                Assert.True(result);
-            });
+                KeystoreCommand = new Command<string>(async (s) =>
+                {
+                    var result = await OnKeystoreClicked();
+                    Assert.True(result);
+                })
+            };
 
             _viewModel.KeystoreCommand.Execute(privateKey);
         }
@@ -94,11 +86,14 @@ namespace EthereumWallet.Tests
         {
             MockForms.Init();
             Application.Current = new App(isTest: true);
-            _viewModel.ChooseEndpointPressed = new Command(async () =>
+            _viewModel = new LoginViewModel(new DialogService())
             {
-                var result = await OnChooseEndpointPressed();
-                Assert.True(result);
-            });
+                ChooseEndpointPressed = new Command(async () =>
+                {
+                    var result = await OnChooseEndpointPressed();
+                    Assert.True(result);
+                })
+            };
 
             _viewModel.ChooseEndpointPressed.Execute(null);
         }
@@ -107,13 +102,12 @@ namespace EthereumWallet.Tests
         {
             if (string.IsNullOrEmpty(privateKey))
             {
-                Assert.True(false);
                 return false;
             }
 
             if (privateKey.Length < 64)
             {
-                Assert.True(false);
+                return false;
             }
             else if (privateKey.Length == 64)
             {

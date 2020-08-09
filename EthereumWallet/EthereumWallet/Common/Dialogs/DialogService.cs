@@ -5,9 +5,9 @@ namespace EthereumWallet.Common.Dialogs
 {
     public class DialogService : IDialogService
     {
-        public async Task DisplayAlert(string title, string message, string cancel)
+        public async Task<bool> DisplayAlert(string title, string message, string accept, string cancel)
         {
-            await Application.Current.MainPage.DisplayAlert(title, message, cancel);
+            return await Application.Current.MainPage.DisplayAlert(title, message, accept, cancel);
         }
 
         public Task<string> DisplayPrompt(string title, string message)

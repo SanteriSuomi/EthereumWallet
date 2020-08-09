@@ -3,15 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:EthereumWallet.Common.Renderers"
              mc:Ignorable="d"
              x:Class="EthereumWallet.Modules.Wallet.Send.WalletSendView"
              Title="Send">
     
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Frame
+                HeightRequest="100"
+                Margin="8, 8, 8, 8"
+                CornerRadius="37.5"
+                HasShadow="True"
+                BorderColor="DodgerBlue">
+                <Editor
+                    FontSize="26"
+                    TextColor="Black"
+                    FontFamily="PrototypeFont"
+                    Placeholder="Address"
+                    Text="{Binding AddressEditorText, Mode=OneWayToSource}">
+                </Editor>
+            </Frame>
+            <Frame
+                HeightRequest="55"
+                Margin="8, 0, 8, 8"
+                CornerRadius="37.5"
+                HasShadow="True"
+                BorderColor="DodgerBlue">
+                <local:DecimalEditor
+                    HeightRequest="100"
+                    FontSize="26"
+                    TextColor="Black"
+                    FontFamily="PrototypeFont"
+                    Placeholder="Amount"
+                    Keyboard="Numeric"
+                    Text="{Binding AmountEditorText, Mode=OneWayToSource}">
+                </local:DecimalEditor>
+            </Frame>
+            <Frame
+                HeightRequest="25"
+                Margin="140, 0, 140, 0"
+                CornerRadius="37.5"
+                HasShadow="True"
+                BorderColor="DodgerBlue">
+                <Button
+                    Margin="-12.5, -12.5, -12.5, -12.5"
+                    FontSize="25"
+                    Text="Send"
+                    FontFamily="PrototypeFont"
+                    BackgroundColor="Transparent"
+                    Command="{Binding SendTransactionPressed}">
+                </Button>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

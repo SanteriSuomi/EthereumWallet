@@ -8,13 +8,13 @@ using EthereumWallet.Modules.Base;
 using EthereumWallet.Modules.Dev.DevLog;
 using EthereumWallet.Modules.WalletRoot;
 using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Plugin.FilePicker.Abstractions;
 
 namespace EthereumWallet.Modules.Login
 {
@@ -34,6 +34,13 @@ namespace EthereumWallet.Modules.Login
             App.SettingsChangedEvent += OnSettingsChanged;
             Connectivity.ConnectivityChanged += OnNetworkAccessChanged;
         }
+
+        public LoginViewModel(IDialogService dialogService)
+        {
+            _dialogService = dialogService;
+        }
+
+        public LoginViewModel() { }
 
         public ICommand PrivateKeyReturnCommand { get; set; }
         public ICommand PrivateKeyTextChangedCommand { get; set; }
@@ -84,7 +91,7 @@ namespace EthereumWallet.Modules.Login
                 OnPropertyChanged();
             }
         }
-        
+
         private string _privateKeyText;
         public string PrivateKeyText
         {
@@ -247,7 +254,7 @@ namespace EthereumWallet.Modules.Login
             {
                 EndpointText = App.Settings.Endpoint.ToString();
             }
-            
+
             UpdateNoInternetAccessLabel();
             await _navigationService.PopToRootAsync();
         }
