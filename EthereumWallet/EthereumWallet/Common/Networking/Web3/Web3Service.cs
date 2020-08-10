@@ -1,4 +1,5 @@
-﻿using EthereumWallet.Common.Data;
+﻿using EthereumWallet.ApplicationBase;
+using EthereumWallet.Common.Data;
 using EthereumWallet.Common.Settings;
 using Nethereum.Util;
 using Nethereum.Web3;
@@ -10,18 +11,35 @@ namespace EthereumWallet.Common.Networking.WebThree
 {
     public class Web3Service : IWeb3Service
     {
-        public Web3 Client { get; set; }
+        private Web3 _client;
+        public Web3 Client
+        {
+            get
+            {
+                if (_client is null 
+                    || _currentEndpoint != App.Settings.Endpoint)
+                {
+                    UpdateClient(App.Settings.Endpoint);
+                }
+
+                return _client;
+            }
+        }
         public Account Account { get; private set; }
+
+        private Endpoint _currentEndpoint;
 
         public void UpdateClient(Endpoint endpoint)
         {
             switch (endpoint)
             {
                 case Endpoint.Mainnet:
-                    Client = new Web3(ApiConstants.EthplorerMainnetApiUrl);
+                    _client = new Web3(ApiConstants.InfuraMainnetApiUrl);
+                    _currentEndpoint = Endpoint.Mainnet;
                     break;
                 case Endpoint.Kovan:
-                    Client = new Web3(ApiConstants.EthplorerKovanApiUrl);
+                    _client = new Web3(ApiConstants.InfuraKovanApiUrl);
+                    _currentEndpoint = Endpoint.Kovan;
                     break;
             }
         }

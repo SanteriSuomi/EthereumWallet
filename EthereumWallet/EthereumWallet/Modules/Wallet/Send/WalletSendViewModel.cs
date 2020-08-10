@@ -40,25 +40,31 @@ namespace EthereumWallet.Modules.Wallet.Send
                 var amountWithCommasReplaced = AmountEditorText.Replace(',', '.');
                 if (decimal.TryParse(amountWithCommasReplaced, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal amount))
                 {
-                    var transactionResult = await AttemptToSendTransaction(amount, address);
+                    var (sent, receipt) = await AttemptToSendTransaction(amount, amountWithCommasReplaced, address);
+                    if (sent)
+                    {
+
+                    }
                 }
             }
         }
 
-        private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string toAddress)
+        private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string toAddress)
         {
-            var publicAddress = _web3Service.Account.Address;
+            var localAddress = _web3Service.Account.Address;
             var privateKey = _web3Service.Account.PrivateKey;
-            //TODO: fix nonce (transaction count) since GetTransactionCount seems not to work (use transaction count from info view/ethplorer api?)
-            var transactionCount = await _web3Service.Client.Eth.Transactions.GetTransactionCount.SendRequestAsync(publicAddress);
 
-            var amount = Web3.Convert.ToWei(decimalAmount);
+            var transactionCount = await _web3Service.Client.Eth.Transactions.GetTransactionCount.SendRequestAsync(localAddress);
+            var gasPrice = await _web3Service.Client.Eth.GasPrice.SendRequestAsync(localAddress);
+            var gasLimit = gasPrice;
+
+            var amount = Web3.Convert.ToWei(decimalAmount, UnitConversion.EthUnit.Ether);
             var nonce = new BigInteger(transactionCount);
 
-            var (verified, encoded) = TrySignAndVerifyTransaction(toAddress, privateKey, amount, nonce);
+            var (verified, encoded) = TrySignAndVerifyTransaction(toAddress, privateKey, amount, nonce, gasPrice, gasLimit);
             if (verified)
             {
-                bool confirmation = await DisplayConfirmation(toAddress, amount);
+                bool confirmation = await DisplayConfirmation(toAddress, amountWithCommasReplaced);
                 if (confirmation)
                 {
                     var receipt = await SendTransaction(encoded);
@@ -67,18 +73,18 @@ namespace EthereumWallet.Modules.Wallet.Send
 
                 return (false, null);
             }
-            
+
             return (false, null);
         }
 
-        private static (bool verified, string encoded) TrySignAndVerifyTransaction(string toAddress, string privateKey, BigInteger amount, BigInteger nonce)
+        private (bool verified, string encoded) TrySignAndVerifyTransaction(string toAddress, string privateKey, 
+            BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit)
         {
-            var signer = new TransactionSigner();
-            var encodedTransaction = signer.SignTransaction(privateKey, toAddress, amount, nonce);
-            return (signer.VerifyTransaction(encodedTransaction), encodedTransaction);
+            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, toAddress, amount, nonce, gasPrice, gasLimit);
+            return (Web3.OfflineTransactionSigner.VerifyTransaction(encodedTransaction), encodedTransaction);
         }
 
-        private async Task<bool> DisplayConfirmation(string toAddress, BigInteger amount)
+        private async Task<bool> DisplayConfirmation(string toAddress, string amount)
         {
             var message = $"Are you sure you want to send {amount} ether to {toAddress}?";
             var confirmation = await _dialogService.DisplayAlert("Transaction Confirmation", message, "Yes", "No");
@@ -89,7 +95,14 @@ namespace EthereumWallet.Modules.Wallet.Send
         {
             var transactionData = $"0x{encoded}";
             var transactionId = await _web3Service.Client.Eth.Transactions.SendRawTransaction.SendRequestAsync(transactionData);
-            return await _web3Service.Client.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionId);
+            var receipt = await _web3Service.Client.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionId);
+            while (receipt is null)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(0.5));
+                receipt = await _web3Service.Client.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionId);
+            }
+
+            return receipt;
         }
     }
 }
