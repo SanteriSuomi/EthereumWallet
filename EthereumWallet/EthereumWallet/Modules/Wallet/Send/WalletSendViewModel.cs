@@ -3,7 +3,6 @@ using EthereumWallet.Common.Extensions;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Modules.Base;
 using Nethereum.RPC.Eth.DTOs;
-using Nethereum.Signer;
 using Nethereum.Util;
 using Nethereum.Web3;
 using System;
@@ -29,13 +28,27 @@ namespace EthereumWallet.Modules.Wallet.Send
         public string AddressEditorText { get; set; }
         public string AmountEditorText { get; set; }
 
+        private bool _isSendingTransaction;
+        public bool IsSendingTransaction
+        {
+            get => _isSendingTransaction;
+            set
+            {
+                _isSendingTransaction = value;
+                MessagingCenter.Send(this, "OnSendingTransactionChanged", value);
+            }
+        }
+
+        private const float receiptRequestDelay = 0.5f;
+
         private readonly IWeb3Service _web3Service;
         private readonly IDialogService _dialogService;
 
         private async Task OnSendTransactionPressed()
         {
-            if (AddressEditorText.IsValidAddress())
+            if (AddressEditorText.IsValidAddress() && !IsSendingTransaction)
             {
+                IsSendingTransaction = true;
                 var address = AddressEditorText;
                 var amountWithCommasReplaced = AmountEditorText.Replace(',', '.');
                 if (decimal.TryParse(amountWithCommasReplaced, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal amount))
@@ -45,11 +58,19 @@ namespace EthereumWallet.Modules.Wallet.Send
                     {
 
                     }
+                    else
+                    {
+                        IsSendingTransaction = false;
+                    }
+                }
+                else
+                {
+                    IsSendingTransaction = false;
                 }
             }
         }
 
-        private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string toAddress)
+        private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string receivingAddress)
         {
             var localAddress = _web3Service.Account.Address;
             var privateKey = _web3Service.Account.PrivateKey;
@@ -59,12 +80,11 @@ namespace EthereumWallet.Modules.Wallet.Send
             var gasLimit = gasPrice;
 
             var amount = Web3.Convert.ToWei(decimalAmount, UnitConversion.EthUnit.Ether);
-            var nonce = new BigInteger(transactionCount);
 
-            var (verified, encoded) = TrySignAndVerifyTransaction(toAddress, privateKey, amount, nonce, gasPrice, gasLimit);
+            var (verified, encoded) = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value, gasPrice, gasLimit);
             if (verified)
             {
-                bool confirmation = await DisplayConfirmation(toAddress, amountWithCommasReplaced);
+                bool confirmation = await DisplayConfirmation(receivingAddress, amountWithCommasReplaced);
                 if (confirmation)
                 {
                     var receipt = await SendTransaction(encoded);
@@ -77,10 +97,10 @@ namespace EthereumWallet.Modules.Wallet.Send
             return (false, null);
         }
 
-        private (bool verified, string encoded) TrySignAndVerifyTransaction(string toAddress, string privateKey, 
-            BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit)
+        private (bool verified, string encoded) TrySignAndVerifyTransaction(string receivingAddress, string privateKey,
+                BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit)
         {
-            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, toAddress, amount, nonce, gasPrice, gasLimit);
+            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce/*, gasPrice, gasLimit*/);
             return (Web3.OfflineTransactionSigner.VerifyTransaction(encodedTransaction), encodedTransaction);
         }
 
@@ -98,10 +118,11 @@ namespace EthereumWallet.Modules.Wallet.Send
             var receipt = await _web3Service.Client.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionId);
             while (receipt is null)
             {
-                await Task.Delay(TimeSpan.FromSeconds(0.5));
+                await Task.Delay(TimeSpan.FromSeconds(receiptRequestDelay));
                 receipt = await _web3Service.Client.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionId);
             }
 
+            IsSendingTransaction = false;
             return receipt;
         }
     }

@@ -10,6 +10,19 @@
     
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout
+                x:Name="sendingTransactionIndicator"
+                HeightRequest="0">
+                <ActivityIndicator
+                    IsRunning="True">
+                </ActivityIndicator>
+                <Label
+                    FontSize="25"
+                    TextColor="Black"
+                    HorizontalOptions="Center"
+                    Text="Sending transaction...">
+                </Label>
+            </StackLayout>
             <Frame
                 HeightRequest="100"
                 Margin="8, 8, 8, 8"
