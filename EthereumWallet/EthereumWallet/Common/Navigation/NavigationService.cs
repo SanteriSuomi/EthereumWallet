@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using EthereumWallet.ApplicationBase;
 using EthereumWallet.Modules.Base;
+using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -69,7 +70,8 @@ namespace EthereumWallet.Common.Navigation
             {
                 if (type.BaseType == typeof(ContentPage)
                     || type.BaseType == typeof(TabbedPage)
-                    || type.BaseType == typeof(Page))
+                    || type.BaseType == typeof(Page)
+                    || type.BaseType == typeof(PopupPage))
                 {
                     var pageViewModel = Type.GetType($"{type.FullName}Model");
                     pageMap[pageViewModel] = type;

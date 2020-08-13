@@ -16,6 +16,7 @@ namespace EthereumWallet.Droid
             base.OnCreate(savedInstanceState);
 
             Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new ApplicationBase.App(isTest: false));
@@ -25,6 +26,11 @@ namespace EthereumWallet.Droid
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public override void OnBackPressed()
+        {
+            Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
         }
     }
 }

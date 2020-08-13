@@ -1,6 +1,4 @@
-﻿using EthereumWallet.Common.Extensions;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace EthereumWallet.Modules.Wallet.Send
@@ -16,11 +14,11 @@ namespace EthereumWallet.Modules.Wallet.Send
             BindingContext = viewModel;
             MessagingCenter.Subscribe<WalletSendViewModel, bool>(this, "OnSendingTransactionChanged", (s, v) =>
             {
-                OnSendingTransactionChanged(v).SafeFireAndForget(true);
+                OnSendingTransactionChanged(v);
             });
         }
 
-        private async Task OnSendingTransactionChanged(bool value)
+        private void OnSendingTransactionChanged(bool value)
         {
             if (value)
             {

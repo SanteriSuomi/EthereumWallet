@@ -48,9 +48,41 @@
                     FontSize="26"
                     TextColor="Black"
                     FontFamily="PrototypeFont"
-                    Placeholder="Amount"
+                    Placeholder="Amount (In Ether)"
                     Keyboard="Numeric"
                     Text="{Binding AmountEditorText, Mode=OneWayToSource}">
+                </local:DecimalEditor>
+            </Frame>
+            <Frame
+                HeightRequest="55"
+                Margin="8, 0, 8, 8"
+                CornerRadius="37.5"
+                HasShadow="True"
+                BorderColor="DodgerBlue">
+                <local:DecimalEditor
+                    HeightRequest="100"
+                    FontSize="26"
+                    TextColor="Black"
+                    FontFamily="PrototypeFont"
+                    Placeholder="Gas Price (In Gwei)"
+                    Keyboard="Numeric"
+                    Text="{Binding GasPriceEditorText, Mode=OneWayToSource}">
+                </local:DecimalEditor>
+            </Frame>
+            <Frame
+                HeightRequest="55"
+                Margin="8, 0, 8, 8"
+                CornerRadius="37.5"
+                HasShadow="True"
+                BorderColor="DodgerBlue">
+                <local:DecimalEditor
+                    HeightRequest="100"
+                    FontSize="26"
+                    TextColor="Black"
+                    FontFamily="PrototypeFont"
+                    Placeholder="Gas Limit (In Wei)"
+                    Keyboard="Numeric"
+                    Text="{Binding GasLimitEditorText, Mode=OneWayToSource}">
                 </local:DecimalEditor>
             </Frame>
             <Frame

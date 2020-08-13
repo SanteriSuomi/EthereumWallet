@@ -1,7 +1,10 @@
 ﻿using EthereumWallet.Common.Dialogs;
 using EthereumWallet.Common.Extensions;
+using EthereumWallet.Common.Navigation;
 using EthereumWallet.Common.Networking.WebThree;
 using EthereumWallet.Modules.Base;
+using EthereumWallet.Modules.Wallet.Send.Transaction;
+using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Util;
 using Nethereum.Web3;
@@ -16,17 +19,24 @@ namespace EthereumWallet.Modules.Wallet.Send
 {
     public class WalletSendViewModel : BaseViewModel
     {
-        public WalletSendViewModel(IWeb3Service web3Service, IDialogService dialogService)
+        public WalletSendViewModel(IWeb3Service web3Service, IDialogService dialogService, INavigationService navigationService)
         {
             _web3Service = web3Service;
             _dialogService = dialogService;
+            _navigationService = navigationService;
             SendTransactionPressed = new Command(() => OnSendTransactionPressed().SafeFireAndForget());
         }
+
+        private const int minimumTransactionGasPriceInGwei = 1;
+        private const int minimumTransactionGasLimitInWei = 21000;
+        private const float receiptRequestDelay = 0.5f;
 
         public ICommand SendTransactionPressed { get; set; }
 
         public string AddressEditorText { get; set; }
         public string AmountEditorText { get; set; }
+        public string GasPriceEditorText { get; set; }
+        public string GasLimitEditorText { get; set; }
 
         private bool _isSendingTransaction;
         public bool IsSendingTransaction
@@ -39,10 +49,9 @@ namespace EthereumWallet.Modules.Wallet.Send
             }
         }
 
-        private const float receiptRequestDelay = 0.5f;
-
         private readonly IWeb3Service _web3Service;
         private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
 
         private async Task OnSendTransactionPressed()
         {
@@ -56,19 +65,21 @@ namespace EthereumWallet.Modules.Wallet.Send
                     var (sent, receipt) = await AttemptToSendTransaction(amount, amountWithCommasReplaced, address);
                     if (sent)
                     {
-
+                        _ = await _navigationService.PushAsync<TransactionCompleteViewModel>(receipt);
                     }
                     else
                     {
-                        IsSendingTransaction = false;
+                        await SendingFailedEvent();
                     }
                 }
                 else
                 {
-                    IsSendingTransaction = false;
+                    await SendingFailedEvent();
                 }
             }
         }
+
+
 
         private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string receivingAddress)
         {
@@ -76,18 +87,26 @@ namespace EthereumWallet.Modules.Wallet.Send
             var privateKey = _web3Service.Account.PrivateKey;
 
             var transactionCount = await _web3Service.Client.Eth.Transactions.GetTransactionCount.SendRequestAsync(localAddress);
-            var gasPrice = await _web3Service.Client.Eth.GasPrice.SendRequestAsync(localAddress);
-            var gasLimit = gasPrice;
-
+            HexBigInteger gasPrice = await GetGasPrice(localAddress);
+            HexBigInteger gasLimit = await GetGasLimit();
             var amount = Web3.Convert.ToWei(decimalAmount, UnitConversion.EthUnit.Ether);
 
-            var (verified, encoded) = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value, gasPrice, gasLimit);
-            if (verified)
+            (bool verified, string encoded) data;
+            if (gasPrice != null && gasLimit != null)
+            {
+                data = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value, gasPrice, gasLimit);
+            }
+            else
+            {
+                data = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value);
+            }
+
+            if (data.verified)
             {
                 bool confirmation = await DisplayConfirmation(receivingAddress, amountWithCommasReplaced);
                 if (confirmation)
                 {
-                    var receipt = await SendTransaction(encoded);
+                    var receipt = await SendTransaction(data.encoded);
                     return (true, receipt);
                 }
 
@@ -97,10 +116,63 @@ namespace EthereumWallet.Modules.Wallet.Send
             return (false, null);
         }
 
+        private async Task<HexBigInteger> GetGasPrice(string address)
+        {
+            HexBigInteger gasPrice;
+            if (!string.IsNullOrEmpty(GasPriceEditorText)
+                && int.TryParse(GasPriceEditorText, NumberStyles.Any, CultureInfo.InvariantCulture, out int price))
+            {
+                if (price <= minimumTransactionGasPriceInGwei)
+                {
+                    await _dialogService.DisplayAlert("Gas Price Error", "Gas Price shouldn't be less than 1 gwei. It might take very long to complete.", null, "Ok");
+                    return null;
+                }
+
+                var weiUnit = Web3.Convert.ToWei(price, UnitConversion.EthUnit.Gwei);
+                gasPrice = new HexBigInteger(weiUnit);
+            }
+            else
+            {
+                gasPrice = await _web3Service.Client.Eth.GasPrice.SendRequestAsync(address);
+            }
+
+            return gasPrice;
+        }
+
+        private async Task<HexBigInteger> GetGasLimit()
+        {
+            HexBigInteger GasLimit;
+            if (!string.IsNullOrEmpty(GasLimitEditorText)
+                && int.TryParse(GasLimitEditorText, NumberStyles.Any, CultureInfo.InvariantCulture, out int limit))
+            {
+                var gweiUnit = Web3.Convert.ToWei(limit, UnitConversion.EthUnit.Wei);
+                if (gweiUnit <= minimumTransactionGasLimitInWei)
+                {
+                    await _dialogService.DisplayAlert("Gas Limit Error", "Gas Limit shouldn't be less than the value of gas price.", null, "Ok");
+                    return null;
+                }
+
+                GasLimit = new HexBigInteger(gweiUnit);
+            }
+            else
+            {
+                GasLimit = new HexBigInteger(minimumTransactionGasLimitInWei);
+            }
+
+            return GasLimit;
+        }
+
         private (bool verified, string encoded) TrySignAndVerifyTransaction(string receivingAddress, string privateKey,
                 BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit)
         {
-            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce/*, gasPrice, gasLimit*/);
+            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce, gasPrice, gasLimit);
+            return (Web3.OfflineTransactionSigner.VerifyTransaction(encodedTransaction), encodedTransaction);
+        }
+
+        private (bool verified, string encoded) TrySignAndVerifyTransaction(string receivingAddress, string privateKey,
+                BigInteger amount, BigInteger nonce)
+        {
+            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce);
             return (Web3.OfflineTransactionSigner.VerifyTransaction(encodedTransaction), encodedTransaction);
         }
 
@@ -124,6 +196,12 @@ namespace EthereumWallet.Modules.Wallet.Send
 
             IsSendingTransaction = false;
             return receipt;
+        }
+
+        private async Task SendingFailedEvent()
+        {
+            _ = await _navigationService.PushAsync<TransactionCompleteViewModel>(new TransactionReceipt());
+            IsSendingTransaction = false;
         }
     }
 }

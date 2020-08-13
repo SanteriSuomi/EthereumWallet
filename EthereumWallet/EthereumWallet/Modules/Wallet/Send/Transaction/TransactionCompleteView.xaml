@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage 
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EthereumWallet.Modules.Wallet.Send.Transaction.TransactionCompleteView"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
+
+    <StackLayout
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        Padding="20, 20, 20, 20">
+        <Label
+            Text="{Binding ReceiptHasErrors}">
+        </Label>
+    </StackLayout>
+</pages:PopupPage>
