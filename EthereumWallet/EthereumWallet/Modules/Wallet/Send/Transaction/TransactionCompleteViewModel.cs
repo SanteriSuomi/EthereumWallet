@@ -10,6 +10,7 @@ namespace EthereumWallet.Modules.Wallet.Send.Transaction
         {
             Receipt = parameter as TransactionReceipt;
             OnPropertyChanged(nameof(Receipt));
+            OnPropertyChanged(nameof(ReceiptHasErrors));
             return base.InitializeAsync(parameter);
         }
 

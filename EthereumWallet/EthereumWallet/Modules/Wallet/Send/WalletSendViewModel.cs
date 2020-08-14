@@ -37,6 +37,7 @@ namespace EthereumWallet.Modules.Wallet.Send
         public string AmountEditorText { get; set; }
         public string GasPriceEditorText { get; set; }
         public string GasLimitEditorText { get; set; }
+        public string DataEditorText { get; set; }
 
         private bool _isSendingTransaction;
         public bool IsSendingTransaction
@@ -79,8 +80,6 @@ namespace EthereumWallet.Modules.Wallet.Send
             }
         }
 
-
-
         private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string receivingAddress)
         {
             var localAddress = _web3Service.Account.Address;
@@ -92,9 +91,9 @@ namespace EthereumWallet.Modules.Wallet.Send
             var amount = Web3.Convert.ToWei(decimalAmount, UnitConversion.EthUnit.Ether);
 
             (bool verified, string encoded) data;
-            if (gasPrice != null && gasLimit != null)
+            if (gasPrice != null && gasLimit != null && !string.IsNullOrEmpty(DataEditorText))
             {
-                data = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value, gasPrice, gasLimit);
+                data = TrySignAndVerifyTransaction(receivingAddress, privateKey, amount, transactionCount.Value, gasPrice, gasLimit, DataEditorText);
             }
             else
             {
@@ -163,9 +162,9 @@ namespace EthereumWallet.Modules.Wallet.Send
         }
 
         private (bool verified, string encoded) TrySignAndVerifyTransaction(string receivingAddress, string privateKey,
-                BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit)
+                BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, string data)
         {
-            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce, gasPrice, gasLimit);
+            var encodedTransaction = Web3.OfflineTransactionSigner.SignTransaction(privateKey, receivingAddress, amount, nonce, gasPrice, gasLimit, data);
             return (Web3.OfflineTransactionSigner.VerifyTransaction(encodedTransaction), encodedTransaction);
         }
 

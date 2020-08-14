@@ -1,6 +1,6 @@
 ﻿namespace EthereumWallet.Tests
 {
-    class WalletSendViewModelTests
+    public class WalletSendViewModelTests
     {
     }
 }

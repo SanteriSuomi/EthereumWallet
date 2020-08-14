@@ -11,7 +11,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -107,34 +106,8 @@ namespace EthereumWallet.Modules.Wallet.Info
             }
             finally
             {
-                NotifyPropertiesChanged();
+                NotifyTypePropertiesChanged(this);
             }
-        }
-
-        private void NotifyPropertiesChanged()
-        {
-            List<PropertyInfo> properties = GetProperties();
-            foreach (var property in properties)
-            {
-                OnPropertyChanged(property.Name);
-            }
-        }
-
-        private List<PropertyInfo> GetProperties()
-        {
-            List<PropertyInfo> properties = new List<PropertyInfo>();
-            try
-            {
-                properties.AddRange(Info.GetType().GetProperties());
-                properties.AddRange(Tokens.GetType().GetProperties());
-                properties.AddRange(GetType().GetProperties());
-            }
-            catch (NullReferenceException e)
-            {
-                Log.Warning(e, "Info/Tokens GetType() or GetProperties() was/were null.");
-            }
-
-            return properties;
         }
     }
 }
