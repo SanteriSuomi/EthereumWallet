@@ -9,8 +9,7 @@ namespace EthereumWallet.Modules.Wallet.Send.Transaction
         public override Task InitializeAsync(object parameter)
         {
             Receipt = parameter as TransactionReceipt;
-            OnPropertyChanged(nameof(Receipt));
-            OnPropertyChanged(nameof(ReceiptHasErrors));
+            OnTypePropertiesChanged(this);
             return base.InitializeAsync(parameter);
         }
 

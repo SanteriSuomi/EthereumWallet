@@ -22,7 +22,7 @@ namespace EthereumWallet.Modules.Base
             return Task.CompletedTask;
         }
 
-        protected void NotifyTypePropertiesChanged(BaseViewModel model)
+        protected void OnTypePropertiesChanged(BaseViewModel model)
         {
             List<PropertyInfo> properties = GetProperties(model);
             foreach (var property in properties)

@@ -24,7 +24,10 @@ namespace EthereumWallet.Modules.Wallet.Send
             _web3Service = web3Service;
             _dialogService = dialogService;
             _navigationService = navigationService;
-            SendTransactionPressed = new Command(() => OnSendTransactionPressed().SafeFireAndForget());
+            SendTransactionPressed = new Command(async () =>
+            {
+                await OnSendTransactionPressed().ConfigureAwait(true);
+            });
         }
 
         private const int minimumTransactionGasPriceInGwei = 1;
@@ -47,6 +50,7 @@ namespace EthereumWallet.Modules.Wallet.Send
             {
                 _isSendingTransaction = value;
                 MessagingCenter.Send(this, "OnSendingTransactionChanged", value);
+                OnPropertyChanged();
             }
         }
 
@@ -66,18 +70,20 @@ namespace EthereumWallet.Modules.Wallet.Send
                     var (sent, receipt) = await AttemptToSendTransaction(amount, amountWithCommasReplaced, address);
                     if (sent)
                     {
-                        _ = await _navigationService.PushAsync<TransactionCompleteViewModel>(receipt);
+                        await _navigationService.PushAsync<TransactionCompleteViewModel>(receipt);
+                        IsSendingTransaction = false;
+                        return;
                     }
-                    else
-                    {
-                        await SendingFailedEvent();
-                    }
-                }
-                else
-                {
-                    await SendingFailedEvent();
                 }
             }
+
+            await SendingFailedEvent();
+        }
+
+        private async Task SendingFailedEvent()
+        {
+            IsSendingTransaction = false;
+            await _navigationService.PushAsync<TransactionCompleteViewModel>(new TransactionReceipt());
         }
 
         private async Task<(bool sent, TransactionReceipt receipt)> AttemptToSendTransaction(decimal decimalAmount, string amountWithCommasReplaced, string receivingAddress)
@@ -105,7 +111,7 @@ namespace EthereumWallet.Modules.Wallet.Send
                 bool confirmation = await DisplayConfirmation(receivingAddress, amountWithCommasReplaced);
                 if (confirmation)
                 {
-                    var receipt = await SendTransaction(data.encoded);
+                    var receipt = await SendTransactionAndGetReceipt(data.encoded);
                     return (true, receipt);
                 }
 
@@ -182,7 +188,7 @@ namespace EthereumWallet.Modules.Wallet.Send
             return confirmation;
         }
 
-        private async Task<TransactionReceipt> SendTransaction(string encoded)
+        private async Task<TransactionReceipt> SendTransactionAndGetReceipt(string encoded)
         {
             var transactionData = $"0x{encoded}";
             var transactionId = await _web3Service.Client.Eth.Transactions.SendRawTransaction.SendRequestAsync(transactionData);
@@ -195,12 +201,6 @@ namespace EthereumWallet.Modules.Wallet.Send
 
             IsSendingTransaction = false;
             return receipt;
-        }
-
-        private async Task SendingFailedEvent()
-        {
-            _ = await _navigationService.PushAsync<TransactionCompleteViewModel>(new TransactionReceipt());
-            IsSendingTransaction = false;
         }
     }
 }

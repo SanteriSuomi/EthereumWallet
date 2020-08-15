@@ -6,9 +6,10 @@ namespace EthereumWallet.Modules.Wallet.Send.Transaction
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TransactionCompleteView : PopupPage
     {
-        public TransactionCompleteView()
+        public TransactionCompleteView(TransactionCompleteViewModel viewModel)
         {
             InitializeComponent();
+            BindingContext = viewModel;
         }
     }
 }

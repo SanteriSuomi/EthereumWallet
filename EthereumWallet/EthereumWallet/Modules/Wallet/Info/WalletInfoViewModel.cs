@@ -106,7 +106,7 @@ namespace EthereumWallet.Modules.Wallet.Info
             }
             finally
             {
-                NotifyTypePropertiesChanged(this);
+                OnTypePropertiesChanged(this);
             }
         }
     }

@@ -2,6 +2,7 @@
 using EthereumWallet.ApplicationBase;
 using EthereumWallet.Modules.Base;
 using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -27,15 +28,30 @@ namespace EthereumWallet.Common.Navigation
         {
             var pageType = PageMap[typeof(TViewModel)];
             var resolvedPage = App.Container.Resolve(pageType);
-            if (resolvedPage is Page page)
+            if (resolvedPage is PopupPage popupPage)
             {
-                await _navigation.Value.PushAsync(page, animated);
-                var baseView = page.BindingContext as BaseViewModel;
-                await baseView.InitializeAsync(parameter);
+                await PopupNavigation.Instance.PushAsync(popupPage, animated);
+                await InitializePage(parameter, popupPage);
                 return true;
             }
-            
+            else if (resolvedPage is Page page)
+            {
+                await _navigation.Value.PushAsync(page, animated);
+                await InitializePage(parameter, page);
+                return true;
+            }
+            else
+            {
+                Serilog.Log.Warning($"resolvedPage is not valid type. Type: {resolvedPage?.GetType()}");
+            }
+
             return false;
+        }
+
+        private async Task InitializePage(object parameter, Page page)
+        {
+            var baseView = page.BindingContext as BaseViewModel;
+            await baseView.InitializeAsync(parameter);
         }
 
         public async Task PopAsync(bool animated = true)
@@ -70,8 +86,8 @@ namespace EthereumWallet.Common.Navigation
             {
                 if (type.BaseType == typeof(ContentPage)
                     || type.BaseType == typeof(TabbedPage)
-                    || type.BaseType == typeof(Page)
-                    || type.BaseType == typeof(PopupPage))
+                    || type.BaseType == typeof(PopupPage)
+                    || type.BaseType == typeof(Page))
                 {
                     var pageViewModel = Type.GetType($"{type.FullName}Model");
                     pageMap[pageViewModel] = type;

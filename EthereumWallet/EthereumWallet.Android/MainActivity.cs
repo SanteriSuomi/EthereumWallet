@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
 using Android.OS;
+using Android.Runtime;
 
 namespace EthereumWallet.Droid
 {
@@ -15,8 +15,8 @@ namespace EthereumWallet.Droid
 
             base.OnCreate(savedInstanceState);
 
-            Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+            Xamarin.Forms.Forms.SetFlags("Expander_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new ApplicationBase.App(isTest: false));
